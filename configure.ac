@@ -23,8 +23,8 @@ dnl AC_CHECK_LIB(pthread, pthread_self,, [AC_MSG_ERROR([libpthread is not found]
 AC_HAVE_LIBRARY(boost_program_options,, [AC_MSG_ERROR([libboost is not found])])
 
 AC_CHECK_HEADER(libelf.h,,[AC_MSG_ERROR([libelf.h is not found])])
-AC_CHECK_HEADER(libdwarf/libdwarf.h,,[AC_MSG_ERROR([libdwarf.h is not found])])
-AC_CHECK_HEADER(libdwarf/dwarf.h,,[AC_MSG_ERROR([dwarf.h is not found])])
+AC_CHECK_HEADER(libdwarf.h,,[AC_MSG_ERROR([libdwarf.h is not found])])
+AC_CHECK_HEADER(dwarf.h,,[AC_MSG_ERROR([dwarf.h is not found])])
 AC_CHECK_HEADER(bfd.h,,[AC_MSG_ERROR([bfd.h is not found])])
 dnl AC_CHECK_HEADER(pthread.h,,[AC_MSG_ERROR([pthread.h is not found])])
 AC_CHECK_HEADER(boost/utility.hpp,,[AC_MSG_ERROR([boost/utility.h is not found])])

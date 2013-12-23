@@ -3,8 +3,9 @@
 #include "main.h"
 
 #include <string>
+#include <climits>
 #include "trace.h"
-#include <asm/user.h>
+#include <sys/user.h>
 
 #ifdef DEBUG
 namespace {

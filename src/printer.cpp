@@ -14,7 +14,7 @@
 #include <cstring>
 #include <sys/time.h>
 #include <sys/ptrace.h>
-#include <asm/user.h>
+#include <sys/user.h>
 
 #include "process.h"
 #include "printer.h"

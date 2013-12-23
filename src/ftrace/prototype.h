@@ -3,7 +3,7 @@
 #define DWARF_H_
 
 #include <string>
-#include <libdwarf/libdwarf.h>
+#include <libdwarf.h>
 #include <boost/shared_ptr.hpp>
 
 namespace hoge {

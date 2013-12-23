@@ -14,6 +14,7 @@
 #include <cerrno>
 #include <cstring>
 #include <csignal>
+#include <stdint.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <boost/shared_ptr.hpp>

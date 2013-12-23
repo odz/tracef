@@ -19,7 +19,7 @@
 #include <sys/stat.h>
 
 #include <libelf.h>
-#include <libdwarf/dwarf.h>
+#include <dwarf.h>
 
 #include "xelf.h"
 #include "prototype.h"
@@ -35,7 +35,7 @@ namespace {
     std::size_t size;
   };
 
-  int prototype_add_elf(Elf *elf, elf& pelf);
+  int prototype_add_elf(Elf *aelf, elf& pelf);
   int prototype_add_cu(Dwarf_Debug dbg, Dwarf_Die die, 
                        elf& pelf);
   int prototype_add(Dwarf_Debug dbg, Dwarf_Die die,
@@ -49,7 +49,7 @@ namespace {
                 std::map<off_t, type_t>& types);
   void types_print(std::map<off_t, type_t>& types);
 
-  int prototype_add_elf(Elf *elf, elf& pelf)
+  int prototype_add_elf(Elf *aelf, elf& pelf)
   {
     int ret;
     Dwarf_Debug dbg;
@@ -61,7 +61,7 @@ namespace {
     Dwarf_Half address_size = 0;
     Dwarf_Unsigned next_cu_offset = 0;
 
-    ret = dwarf_elf_init(elf, DW_DLC_READ, NULL, NULL, &dbg, &err);
+    ret = dwarf_elf_init(aelf, DW_DLC_READ, NULL, NULL, &dbg, &err);
     if(ret == DW_DLV_NO_ENTRY){
       return -1;
     }
