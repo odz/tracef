@@ -1,0 +1,39 @@
+[pid 1228] +++ process 1228 attached (ppid 1227) +++
+[pid 1228] === symbols loaded: './qsort' ===
+[pid 1228] ==> _start() at 0x080482b0
+[pid 1228]    ==> __libc_start_main@plt() at 0x08048298
+[pid 1228]       ==> __libc_csu_init() at 0x08048410
+[pid 1228]          ==> _init() at 0x08048250
+[pid 1228]             ==> call_gmon_start() at 0x080482d4
+[pid 1228]             <== call_gmon_start() [eax = 0x0]
+[pid 1228]             ==> frame_dummy() at 0x08048360
+[pid 1228]             <== frame_dummy() [eax = 0x0]
+[pid 1228]             ==> __do_global_ctors_aux() at 0x08048480
+[pid 1228]             <== __do_global_ctors_aux() [eax = 0xffffffff]
+[pid 1228]          <== _init() [eax = 0xffffffff]
+[pid 1228]       <== __libc_csu_init() [eax = 0x80494d4]
+[pid 1228]       ==> main() at 0x0804839b [/home/sato/tracef-trunk/sample/qsort.c:9] 
+[pid 1228]          ==> qsort@plt() at 0x08048278
+[pid 1228]             ==> cmp() at 0x08048384 [/home/sato/tracef-trunk/sample/qsort.c:4] 
+[pid 1228]             <== cmp() [eax = 0x1]
+[pid 1228]             ==> cmp() at 0x08048384 [/home/sato/tracef-trunk/sample/qsort.c:4] 
+[pid 1228]             <== cmp() [eax = 0x0]
+[pid 1228]             ==> cmp() at 0x08048384 [/home/sato/tracef-trunk/sample/qsort.c:4] 
+[pid 1228]             <== cmp() [eax = 0x1]
+[pid 1228]             ==> cmp() at 0x08048384 [/home/sato/tracef-trunk/sample/qsort.c:4] 
+[pid 1228]             <== cmp() [eax = 0x0]
+[pid 1228]             ==> cmp() at 0x08048384 [/home/sato/tracef-trunk/sample/qsort.c:4] 
+[pid 1228]             <== cmp() [eax = 0x1]
+[pid 1228]             ==> cmp() at 0x08048384 [/home/sato/tracef-trunk/sample/qsort.c:4] 
+[pid 1228]             <== cmp() [eax = 0x0]
+[pid 1228]             ==> cmp() at 0x08048384 [/home/sato/tracef-trunk/sample/qsort.c:4] 
+[pid 1228]             <== cmp() [eax = 0x1]
+[pid 1228]             ==> cmp() at 0x08048384 [/home/sato/tracef-trunk/sample/qsort.c:4] 
+[pid 1228]             <== cmp() [eax = 0x0]
+[pid 1228]          <== qsort@plt() [eax = 0xbff29984]
+[pid 1228]       <== main() [eax = 0x4]
+[pid 1228]       ==> _fini() at 0x080484a8
+[pid 1228]          ==> __do_global_dtors_aux() at 0x08048300
+[pid 1228]          <== __do_global_dtors_aux() [eax = 0x0]
+[pid 1228]       <== _fini() [eax = 0x0]
+[pid 1228] +++ process 1228 detached (ppid 1227) +++

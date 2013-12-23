@@ -1,0 +1,29 @@
+[pid 1263] +++ process 1263 attached (ppid 1262) +++
+[pid 1263] === symbols loaded: './mutual_recursion' ===
+[pid 1263] ==> _start() at 0x080482b0
+[pid 1263]    ==> __libc_csu_init() at 0x08048460
+[pid 1263]       ==> _init() at 0x08048250
+[pid 1263]          ==> call_gmon_start() at 0x080482d4
+[pid 1263]          <== call_gmon_start() [eax = 0x0]
+[pid 1263]          ==> frame_dummy() at 0x08048360
+[pid 1263]          <== frame_dummy() [eax = 0x0]
+[pid 1263]          ==> __do_global_ctors_aux() at 0x080484d0
+[pid 1263]          <== __do_global_ctors_aux() [eax = 0xffffffff]
+[pid 1263]       <== _init() [eax = 0xffffffff]
+[pid 1263]    <== __libc_csu_init() [eax = 0x8049538]
+[pid 1263]    ==> main() at 0x080483f8 [/home/sato/tracef-trunk/sample/mutual_recursion.c:19] 
+[pid 1263]       ==> even(uint n <4>) at 0x08048384 [/home/sato/tracef-trunk/sample/mutual_recursion.c:5] 
+[pid 1263]          ==> odd(uint n <3>) at 0x080483be [/home/sato/tracef-trunk/sample/mutual_recursion.c:12] 
+[pid 1263]             ==> even(uint n <2>) at 0x08048384 [/home/sato/tracef-trunk/sample/mutual_recursion.c:5] 
+[pid 1263]                ==> odd(uint n <1>) at 0x080483be [/home/sato/tracef-trunk/sample/mutual_recursion.c:12] 
+[pid 1263]                <== odd() [eax = 0x1]
+[pid 1263]             <== even() [eax = 0x1]
+[pid 1263]          <== odd() [eax = 0x1]
+[pid 1263]       <== even() [eax = 0x1]
+[pid 1263]    <== main() [eax = 0x0]
+[pid 1263]    ==> _fini() at 0x080484f8
+[pid 1263]       ==> __do_global_dtors_aux() at 0x08048300
+[pid 1263]       <== __do_global_dtors_aux() [eax = 0x0]
+[pid 1263]    <== _fini() [eax = 0x0]
+4 is even
+[pid 1263] +++ process 1263 detached (ppid 1262) +++

@@ -1,0 +1,23 @@
+[pid 1261] +++ process 1261 attached (ppid 1260) +++
+[pid 1261] === symbols loaded: './recursion_opt' ===
+[pid 1261] ==> _start() at 0x08048300
+[pid 1261]    ==> __libc_csu_init() at 0x08048450
+[pid 1261]       ==> _init() at 0x08048294
+[pid 1261]          ==> call_gmon_start() at 0x08048324
+[pid 1261]          <== call_gmon_start() [eax = 0x0]
+[pid 1261]          ==> frame_dummy() at 0x080483b0
+[pid 1261]          <== frame_dummy() [eax = 0x0]
+[pid 1261]          ==> __do_global_ctors_aux() at 0x080484c0
+[pid 1261]          <== __do_global_ctors_aux() [eax = 0xffffffff]
+[pid 1261]       <== _init() [eax = 0xffffffff]
+[pid 1261]    <== __libc_csu_init() [eax = 0x8049524]
+[pid 1261]    ==> main() at 0x080483ec [/home/sato/tracef-trunk/sample/recursion.c:9] 
+[pid 1261]       ==> sum(int n <10>) at 0x080483d4 [/home/sato/tracef-trunk/sample/recursion.c:4] 
+[pid 1261]       <== sum() [eax = 0x37]
+sum(10) = 55
+[pid 1261]    <== main() [eax = 0x37]
+[pid 1261]    ==> _fini() at 0x080484e8
+[pid 1261]       ==> __do_global_dtors_aux() at 0x08048350
+[pid 1261]       <== __do_global_dtors_aux() [eax = 0x0]
+[pid 1261]    <== _fini() [eax = 0x0]
+[pid 1261] +++ process 1261 detached (ppid 1260) +++

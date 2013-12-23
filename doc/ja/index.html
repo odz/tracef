@@ -1,0 +1,1286 @@
+<html>
+<head>
+  <link href="css/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="css/prettify.js"></script>
+  <meta http-equiv="Content-Script-Type" content="text/javascript"/>
+  <meta http-equiv="Content-Style-Type" content="text/css"/>
+  <link rel="stylesheet" type="text/css" href="css/tnstyle.css"/>
+  <link rel="stylesheet" type="text/css" href="css/tnclass.css"/>
+  <title>tracef - function call tracer</title>
+</head>
+<body onload="prettyPrint()">
+
+<h1>
+tracef - function call tracer
+</h1>
+
+このページは書きかけです。<br/>
+hogetraceという名前はあんまりなので自重してtracefに変更しました。
+
+<h2>
+TOC
+</h2>
+
+<ul>
+<li><a href="#overview">概要</a></li>
+<ul>
+<li><a href="#ov_sample">実行例</a></li>
+</ul>
+<li><a href="#env">動作環境 (OS)</a></li>
+<li><a href="#dl">ダウンロード</a></li>
+<li><a href="#build_env">ビルド環境</a></li>
+<li><a href="#build">ビルド手順</a></li>
+<li><a href="#target">解析可能なプログラム</a></li>
+<li><a href="#screenshots">スクリーンショット</a></li>
+<ol>
+<li><a href="#sc_1">forkするプログラムの解析</a></li>
+<li><a href="#sc_2">execするプログラムの解析</a></li>
+<li><a href="#sc_3">再帰</a></li>
+<li><a href="#sc_4">マルチスレッド</a></li>
+<li><a href="#sc_5">みんなだいすき例外スロー</a></li>
+<li><a href="#sc_6">mainの前に呼ばれる関数</a></li>
+</ol>
+<li><a href="#limitations">制限事項</a></li>
+<li><a href="#opt">コマンドラインオプション</a></li>
+<li><a href="#internal">仕組み (つぶやき)</a></li>
+<li><a href="#related_works">類似ツール</a></li>
+</ul>
+
+<h2>
+<a name="overview">
+概要
+</a>
+</h2>
+
+<p>
+<s>hogetrace</s>
+tracefは、Linux向けの「関数コールトレーサ」です。
+<s>自作関数の先頭と末尾にも0xCCを仕掛けるようにしたptraceベースのltraceもどきです。おわり。</s>
+ディストリビューションに標準で含まれている<a href="http://itpro.nikkeibp.co.jp/article/COLUMN/20060226/230677/">ltrace</a>コマンドに似ていますが、次のような特徴・相違点があります。
+</p>
+
+<ul>
+<li>DSO(DLL)内のライブラリ関数の呼び出しだけでなく、自作の関数の呼び出しもトレースできる
+<li>関数呼び出しの親子関係をツリー状に見やすく表示できる
+<li>関数の実装されているファイル名、行番号を表示できる
+</ul>
+
+<p>
+これらの特徴により、
+</p>
+
+<ul>
+<li>未知の大きなプログラムの動きを把握したいとき
+<li>ソースコードを読む上での手がかりを得たいとき
+<li>(特にC++のプログラムで) main関数の前や後でどんな初期化が行われているか簡単に確認したい時
+<li>...
+</ul>
+
+<p>
+などに活用できるツールになっています。残念ながら、関数呼び出し際の引数の情報はltraceほど詳しくは表示されないので、デバッグ用途に用いるのは(まだ)厳しいかもしれません。
+手元では、C++で書かれたやや大きめの実行ファイル(.textのサイズが5Mバイト程度、text/weakなsymbol数が2万程度、プロセス/スレッド数が数十)の解析が問題なく行えています。
+</p>
+
+<p>
+解析対象のプログラムの再コンパイルは、解析対象がstripされていない限りは不要です。gdbでデバッグ可能な実行ファイルであれば、tracefでトレースすることができます。
+解析対象の実行ファイルに含まれる「自作関数」の呼び出し状況の他、ltraceが表示するような、ライブラリ関数の呼び出し状況もある程度表示することが可能です（コマンドラインオプションで表示有無を選択できます）。
+</p>
+
+<p>
+tracefは、ltraceやstrace、あるいはgdbと同じように、Linux kernelのptrace(2)システムコールを利用して、
+別プロセスから解析対象のプログラムを観察し、観察状況を表示しています。
+</p>
+
+<h3>
+<a name="ov_sample">
+実行例
+</a>
+</h3>
+
+<p>
+例えば次のようなプログラムをトレースすると、
+</p>
+
+<pre class="prettyprint">
+#include &lt;stdio.h&gt;
+
+void my_func_2() {
+  puts("hello, world!");
+}
+
+void my_func_1() {
+  my_func_2();
+}
+
+int main(int argc, char** argv) {
+  my_func_1();
+  fflush(stdout);
+  return 0;
+}
+</pre>
+
+<p>
+結果は次のようになります。
+</p>
+
+<pre>
+$ gcc -g -o hello hello.c 
+$ tracef --plt --line-numbers --call-tree hello
+
+[pid 30126] +++ process 30126 attached (ppid 30125) +++
+[pid 30126] === symbols loaded: './hello' ===
+[pid 30126] ==&gt; _start() at 0x08048300
+[pid 30126]    ==&gt; __libc_start_main@plt() at 0x080482cc
+[pid 30126]       ==&gt; __libc_csu_init() at 0x08048440
+[pid 30126]          ==&gt; _init() at 0x08048294
+[pid 30126]             ==&gt; call_gmon_start() at 0x08048324
+[pid 30126]             &lt;== call_gmon_start() [eax = 0x0]
+[pid 30126]             ==&gt; frame_dummy() at 0x080483b0
+[pid 30126]             &lt;== frame_dummy() [eax = 0x0]
+[pid 30126]             ==&gt; __do_global_ctors_aux() at 0x080484b0
+[pid 30126]             &lt;== __do_global_ctors_aux() [eax = 0xffffffff]
+[pid 30126]          &lt;== _init() [eax = 0xffffffff]
+[pid 30126]       &lt;== __libc_csu_init() [eax = 0x8049514]
+[pid 30126]       ==&gt; main() at 0x080483f5 [/home/sato/tracef/sample/hello.c:14] 
+[pid 30126]          ==&gt; my_func_1() at 0x080483e8 [/home/sato/tracef/sample/hello.c:9] 
+[pid 30126]             ==&gt; my_func_2() at 0x080483d4 [/home/sato/tracef/sample/hello.c:4] 
+[pid 30126]                ==&gt; puts@plt() at 0x080482ec
+[pid 30126]                &lt;== puts@plt() [eax = 0xe]
+[pid 30126]             &lt;== my_func_2() [eax = 0xe]
+[pid 30126]          &lt;== my_func_1() [eax = 0xe]
+[pid 30126]          ==&gt; fflush@plt() at 0x080482dc
+hello, world!
+[pid 30126]          &lt;== fflush@plt() [eax = 0x0]
+[pid 30126]       &lt;== main() [eax = 0x0]
+[pid 30126]       ==&gt; _fini() at 0x080484d8
+[pid 30126]          ==&gt; __do_global_dtors_aux() at 0x08048350
+[pid 30126]          &lt;== __do_global_dtors_aux() [eax = 0x0]
+[pid 30126]       &lt;== _fini() [eax = 0x0]
+[pid 30126] +++ process 30126 detached (ppid 30125) +++
+tracef: done
+</pre>
+
+<p>
+main()がmy_func_1()を呼び、my_func_1()がmy_func_2()を呼んでいる様子が表示されています。また、
+これらの関数が定義されているソースファイル名も表示されています。
+</p>
+<p>
+今回は --synthetic オプションを付けているため、puts@plt() などの、DSO内の関数呼び出し
+の様子もトレースされています。--synthetic オプションを外せば、純粋に自作関数だけのトレースが行われます。オプションによっては、関数の引数の簡単な情報を表示することもできます。
+</p>
+
+<h2>
+<a name="env">
+動作環境 (OS)
+</a>
+</h2>
+
+<ul>
+<li>
+Linux
+<ul>
+<li>
+kernel 2.6以降
+<li>
+x86, x86_64(一部機能制限あり)
+</ul>
+</ul>
+
+<h2>
+<a name="dl">
+ダウンロード
+</a>
+</h2>
+
+<ul>
+<li>
+<a href="tracef-0.16.tar.gz">tracef-0.16.tar.gz</a> (rpmbuild -t 対応, GPLv3)
+<li>
+<a href="tracef-0.16-1.src.rpm">tracef-0.16-1.src.rpm</a>
+<li>
+<a href="tracef-0.16-1.i386.rpm">tracef-0.16-1.i386.rpm</a>
+</ul>
+
+<h2>
+<a name="build_env">
+ビルドに必要なライブラリ
+</a>
+</h2>
+
+<h3>
+Fedora Core 6 / Fedora 7
+</h3>
+
+<ul>
+<li>
+gcc-c++ 
+<li>
+libstdc++-devel 
+<li>
+binutils-devel 
+<li>
+elfutils-libelf-devel 
+<li>
+boost-devel
+</ul>
+
+<h3>
+RHEL4 / CentOS4
+</h3>
+
+<ul>
+<li>
+gcc-c++ 
+<li>
+libstdc++-devel 
+<li>
+binutils
+<li>
+elfutils-libelf-devel 
+<li>
+boost-devel
+</ul>
+
+<h3>
+Ubuntu 7.04
+</h3>
+
+<ul>
+<li>
+g++
+<li>
+binutils-dev 
+<li>
+elfutils 
+<li>
+libelf-dev 
+<li>
+boost*
+</ul>
+
+<h3>
+libdwarf
+</h3>
+
+<p>
+上記とは別にlibdwarfが要ります。
+<p>
+
+<ul>
+<li>
+<a href="libdwarf-20070703-3.src.rpm">libdwarf-20070703-3.src.rpm</a>
+<li>
+<a href="libdwarf-20070703-3.i386.rpm">libdwarf-20070703-3.i386.rpm</a> (Ubuntu 7.04/x86 にもalien -iで導入可)
+</ul>
+
+<h2>
+<a name="build">
+ビルド手順
+</a>
+</h2>
+
+<pre>
+$ tar xvzf tracef-0.1.tar.gz 
+$ cd tracef-0.1
+$ ./configure
+$ cd src
+$ make
+</pre>
+
+<p>
+makeの結果できあがった src/tracef がトレーサです。このバイナリ(tracef)は、/usr/local/bin などにインストールせずとも、お好きな場所に置いたままで、
+それ単体ですぐに動かすことができます。動作を見るためのサンプルプログラムを sample/ に用意しました。
+</p>
+
+<pre>
+$ cd ../sample
+$ ./sample.sh
+</pre>
+
+<p>
+sample.sh を実行すると、いくつかのテストプログラムがコンパイル、リンクされ、それぞれがいま作成したtracefで解析され、結果がsample/logs/に格納されます。
+sample/logs/ ディレクトリには、<a href="http://ouchi.nahi.to/~kaidempa/mt-daapd/">mt-daapd-0.2.4</a> (iTunesサーバ) を私がtracefで解析した結果 (たとえば<a href="mt-daapd-0.2.4.log.22288.txt">こんなの</a>) も、参考として含めてあります。
+</p>
+
+
+<h2>
+<a name="target">
+解析可能なプログラム
+</a>
+</h2>
+
+<h3>
+再コンパイル要否
+</h3>
+
+<p>
+解析対象の再コンパイルは、解析対象がstripされていない場合は不要です。gdbで解析できるバイナリであれば再コンパイルは不要でしょう。
+</p>
+
+<p>
+また、解析対象が -g 付きでコンパイルされていると、出力される情報が増えます。例えば行番号情報、引数情報が出力可能になります。解析対象は、-O0 でコンパイルされていることが望ましいですが、必須ではありません。最適化されている場合、一部の関数の呼び出しを検出できない場合があります。
+</p>
+
+<p>
+stripされているバイナリをトレースしてもtracefが異常終了したりということはありませんが、何も解析結果が出力されません。
+</p>
+
+<h3>
+詳細
+</h3>
+
+<p>
+stripされているかどうかは、fileコマンドを使って "stripped" "not stipped" のどちらが表示されるかで確認可能です。あるいは readelf -S コマンドで.symtab セクションが存在するバイナリであることを直接確認する方法でもOKです。
+下記の例ではa.outはstripされていません。
+</p>
+
+<pre>
+$ file a.out
+a.out: ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV), dynamically linked (uses shared libs), for GNU/Linux 2.6.9, not stripped
+$ readelf -S a.out | grep '\.symtab'
+  [40] .symtab           SYMTAB          00000000 5d20b4 00d4d0 10     41 1056  4
+</pre>
+
+<p>
+なお、/lib/lib*.a や /usr/lib/lib*.a ファイルは .symtab を含んでいますので、こういった lib*.a ファイルを
+リンクするとその中に含まれる関数もトレースの対象になります。それらをトレースしたくない場合は、.a ではなく .so 
+をリンクしてください。
+</p>
+
+<p>
+プログラムが gcc -g でデバッグ情報ありでコンパイルされていると、トレース結果にその関数が定義された
+ソースファイル名、行番号を含めることができます。また、一部の関数の引数の情報を表示することも可能に
+なります。プログラムが -g (あるいは -ggdb や -g3 など) 付きでコンパイルされたかどうかは、readelf -S
+コマンドで確認可能です。.debug_* というセクションがあれば -g 付きでコンパイルされています。
+</p>
+
+<pre>
+$ readelf -S a.out | grep '\.debug_'
+  [29] .debug_aranges    PROGBITS        00000000 0cb8a6 002aa8 00      0   0  1
+  [30] .debug_pubnames   PROGBITS        00000000 0ce34e 02d72c 00      0   0  1
+  [31] .debug_info       PROGBITS        00000000 0fba7a 1670e5 00      0   0  1
+  (略)
+</pre>
+
+<p>
+その他細かい点:
+
+<ul>
+<li?
+最適化 (-O2 など) のかかったプログラムも、それなりに解析可能なはずです。ただ、末尾再帰最適化
+などの影響で、解析結果の表示が若干見にくくなったり、ツリー表示のインデントがとんどん深くなってしまうケースがあります。例を下の方に載せます。
+<li>
+マルチスレッドなプログラムも解析可能です (ltrace-0.5 とは違って!)。
+<li>
+同様に、forkするプログラムも解析可能です。forkされて出来た子プロセスも解析できます。
+<li>
+fork後にexecされてしまっても大丈夫、execされた実行ファイルのシンボルをちゃんと読み直します。
+<li>
+SIGSEGV/SIGILL/SIGBUS/SIGFPEなどでクラッシュするプログラムの解析も可能です。クラッシュした原因の命令の場所(EIP)も表示されます。
+<li>
+C++なシンボルはdemangle(可読化)して表示できます。
+</ul>
+</p>
+
+<h2>
+<a name="screenshots">
+スクリーンショット?
+</a>
+</h2>
+
+tracefによるプログラムの解析例を5つ載せておきます。
+
+<h3>
+<a name="sc_1">
+1. forkするプログラムの解析
+</a>
+</h3>
+
+<pre class="prettyprint">
+#include &lt;stdio.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;unistd.h&gt;
+
+int main() {
+  if (fork() == 0) {
+    printf("hello world\n");  
+    return 1;
+  }
+  return 0;
+}
+</pre>
+
+<p>
+tracefで上のプログラムを解析すると次のような出力になります。forkされたプロセスを自動で解析開始(attach)しています。
+--ff オプションで、プロセス/スレッド毎に別のログファイルに結果を出力することも可能です。
+</p>
+
+<pre>
+$ ../src/tracef --synthetic -flATu ./fork
+[pid 30133] 13:56:14.041015 +++ process 30133 attached (ppid 30132) +++
+[pid 30133] 13:56:14.065944 === symbols loaded: './fork' ===
+[pid 30133] 13:56:14.086854 ==&gt; _start() at 0x080482e0
+[pid 30133] 13:56:14.103301    ==&gt; __libc_start_main@plt() at 0x080482a4
+[pid 30133] 13:56:14.120804       ==&gt; __libc_csu_init() at 0x08048410
+[pid 30133] 13:56:14.142981          ==&gt; _init() at 0x0804826c
+[pid 30133] 13:56:14.167027             ==&gt; call_gmon_start() at 0x08048304
+[pid 30133] 13:56:14.198099             &lt;== call_gmon_start() [eax = 0x0]
+[pid 30133] 13:56:14.228514             ==&gt; frame_dummy() at 0x08048390
+[pid 30133] 13:56:14.256405             &lt;== frame_dummy() [eax = 0x0]
+[pid 30133] 13:56:14.287810             ==&gt; __do_global_ctors_aux() at 0x08048480
+[pid 30133] 13:56:14.316187             &lt;== __do_global_ctors_aux() [eax = 0xffffffff]
+[pid 30133] 13:56:14.346243          &lt;== _init() [eax = 0xffffffff]
+[pid 30133] 13:56:14.373957       &lt;== __libc_csu_init() [eax = 0x80494e0]
+[pid 30133] 13:56:14.400881       ==&gt; main() at 0x080483b4 [/home/sato/tracef/sample/fork.c:6] 
+[pid 30133] 13:56:14.424637          ==&gt; fork@plt() at 0x080482c4
+[pid 30134] 13:56:14.440226 +++ process 30134 attached (ppid 30133) +++
+[pid 30134] 13:56:14.444849          &lt;== fork@plt() [eax = 0x0]
+[pid 30134] 13:56:14.455462          ==&gt; puts@plt() at 0x080482b4
+hello world
+[pid 30134] 13:56:14.468085          &lt;== puts@plt() [eax = 0xc]
+[pid 30134] 13:56:14.495761       &lt;== main() [eax = 0x1]
+[pid 30134] 13:56:14.519362       ==&gt; _fini() at 0x080484a8
+[pid 30134] 13:56:14.539950          ==&gt; __do_global_dtors_aux() at 0x08048330
+[pid 30134] 13:56:14.566927          &lt;== __do_global_dtors_aux() [eax = 0x0]
+[pid 30134] 13:56:14.592884       &lt;== _fini() [eax = 0x0]
+[pid 30134] 13:56:14.616904 +++ process 30134 detached (ppid 30133) +++
+[pid 30133] 13:56:14.625031          &lt;== fork@plt() [eax = 0x75b6]
+[pid 30133] 13:56:14.652768 --- SIGCHLD received (#17 Child exited) ---
+[pid 30133] 13:56:14.660887       &lt;== main() [eax = 0x0]
+[pid 30133] 13:56:14.685255       ==&gt; _fini() at 0x080484a8
+[pid 30133] 13:56:14.701960          ==&gt; __do_global_dtors_aux() at 0x08048330
+[pid 30133] 13:56:14.726249          &lt;== __do_global_dtors_aux() [eax = 0x0]
+[pid 30133] 13:56:14.755024       &lt;== _fini() [eax = 0x0]
+[pid 30133] 13:56:14.781833 +++ process 30133 detached (ppid 30132) +++
+</pre>
+
+<h3>
+<a name="sc_2">
+2. execするプログラムの解析
+</a>
+</h3>
+
+<p>
+自分自身をexecすることで足し算という処理を進めていくプログラムを書いてみました (元ネタは何だっけな...BinaryHacks? 思い出せない)。 $ ./exec 0 5 のように起動すると、見えないところでexecve(2)を繰り返して 5+4+3+2+1 を計算し、結果を出力します。argv[1]が累積変数です。
+</p>
+
+<pre class="prettyprint">
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;unistd.h&gt;
+
+int main(int argc, char** argv) {
+  if (argc != 3) return 0; /* usage: ./a.out 0 N */
+
+  int accum = atoi(argv[1]);
+  int n = atoi(argv[2]);
+
+  if (n == 0) {
+    printf("answer: %d\n", accum);
+    return accum;
+  }
+
+  char p[32] = {0}, q[32] = {0};
+  snprintf(p, 31, "%d", accum + n);
+  snprintf(q, 31, "%d", n - 1);
+
+  execlp("/proc/self/exe", "exe", p, q, NULL);
+  return -1;
+}
+</pre>
+
+<p>
+...プログラムの内容はともかく、execve(2) するようなプログラムであっても、きちんとトレースを継続できていることが下記で確認できます。
+</p>
+
+<pre>
+$ ../src/tracef --synthetic -flATuv ./exec 0 5   
+[pid 30137] 13:59:40.506880 +++ process 30137 attached (ppid 30136) +++
+[pid 30137] 13:59:40.516425 === symbols loaded: './exec' ===
+[pid 30137] 13:59:40.523785 ==&gt; _start() at 0x08048340
+[pid 30137] 13:59:40.526590    ==&gt; __libc_start_main@plt() at 0x080482e4
+[pid 30137] 13:59:40.528794       ==&gt; __libc_csu_init() at 0x08048550
+[pid 30137] 13:59:40.533544          ==&gt; _init() at 0x080482ac
+[pid 30137] 13:59:40.536994             ==&gt; call_gmon_start() at 0x08048364
+[pid 30137] 13:59:40.540511             &lt;== call_gmon_start() [eax = 0x0]
+[pid 30137] 13:59:40.545888             ==&gt; frame_dummy() at 0x080483f0
+[pid 30137] 13:59:40.549673             &lt;== frame_dummy() [eax = 0x0]
+[pid 30137] 13:59:40.560435             ==&gt; __do_global_ctors_aux() at 0x080485c0
+[pid 30137] 13:59:40.585169             &lt;== __do_global_ctors_aux() [eax = 0xffffffff]
+[pid 30137] 13:59:40.618919          &lt;== _init() [eax = 0xffffffff]
+[pid 30137] 13:59:40.648524       &lt;== __libc_csu_init() [eax = 0x8049638]
+[pid 30137] 13:59:40.674937       ==&gt; main(int argc &lt;3&gt;, POINTER argv &lt;0xbff88a44&gt;) at 0x08048414 [/home/sato/tracef/sample/exec.c:6] 
+[pid 30137] 13:59:40.718245          ==&gt; atoi@plt() at 0x08048314
+[pid 30137] 13:59:40.744948          &lt;== atoi@plt() [eax = 0x0]
+[pid 30137] 13:59:40.770063          ==&gt; atoi@plt() at 0x08048314
+[pid 30137] 13:59:40.793048          &lt;== atoi@plt() [eax = 0x5]
+[pid 30137] 13:59:40.819975          ==&gt; snprintf@plt() at 0x08048324
+[pid 30137] 13:59:40.843943          &lt;== snprintf@plt() [eax = 0x1]
+[pid 30137] 13:59:40.873277          ==&gt; snprintf@plt() at 0x08048324
+[pid 30137] 13:59:40.898579          &lt;== snprintf@plt() [eax = 0x1]
+[pid 30137] 13:59:40.923149          ==&gt; execlp@plt() at 0x080482f4
+[pid 30137] 13:59:40.947893 === execve(2) called. reloading symbols... ===
+[pid 30137] 13:59:40.962784 === symbols loaded: 'exe' ===
+[pid 30137] 13:59:40.977023 ==&gt; _start() at 0x08048340
+...
+[pid 30137] 13:59:42.522945          ==&gt; execlp@plt() at 0x080482f4
+[pid 30137] 13:59:42.546478 === execve(2) called. reloading symbols... ===
+[pid 30137] 13:59:42.556684 === symbols loaded: 'exe' ===
+[pid 30137] 13:59:42.568359 ==&gt; _start() at 0x08048340
+[pid 30137] 13:59:42.580952    ==&gt; __libc_start_main@plt() at 0x080482e4
+[pid 30137] 13:59:42.594888       ==&gt; __libc_csu_init() at 0x08048550
+[pid 30137] 13:59:42.607220          ==&gt; _init() at 0x080482ac
+[pid 30137] 13:59:42.616299             ==&gt; call_gmon_start() at 0x08048364
+[pid 30137] 13:59:42.625258             &lt;== call_gmon_start() [eax = 0x0]
+[pid 30137] 13:59:42.643251             ==&gt; frame_dummy() at 0x080483f0
+[pid 30137] 13:59:42.654002             &lt;== frame_dummy() [eax = 0x0]
+[pid 30137] 13:59:42.664041             ==&gt; __do_global_ctors_aux() at 0x080485c0
+[pid 30137] 13:59:42.673053             &lt;== __do_global_ctors_aux() [eax = 0xffffffff]
+[pid 30137] 13:59:42.688869          &lt;== _init() [eax = 0xffffffff]
+[pid 30137] 13:59:42.697093       &lt;== __libc_csu_init() [eax = 0x8049638]
+[pid 30137] 13:59:42.706019       ==&gt; main(int argc &lt;3&gt;, POINTER argv &lt;0xbf966364&gt;) at 0x08048414 [/home/sato/tracef/sample/exec.c:6] 
+[pid 30137] 13:59:42.719013          ==&gt; atoi@plt() at 0x08048314
+[pid 30137] 13:59:42.726840          &lt;== atoi@plt() [eax = 0xf]
+[pid 30137] 13:59:42.731108          ==&gt; atoi@plt() at 0x08048314
+[pid 30137] 13:59:42.735355          &lt;== atoi@plt() [eax = 0x0]
+[pid 30137] 13:59:42.738764          ==&gt; printf@plt() at 0x08048304
+answer: 15
+[pid 30137] 13:59:42.745753          &lt;== printf@plt() [eax = 0xb]
+[pid 30137] 13:59:42.749255       &lt;== main() [eax = 0xf]
+[pid 30137] 13:59:42.752250       ==&gt; _fini() at 0x080485e8
+[pid 30137] 13:59:42.755001          ==&gt; __do_global_dtors_aux() at 0x08048390
+[pid 30137] 13:59:42.758079          &lt;== __do_global_dtors_aux() [eax = 0x0]
+[pid 30137] 13:59:42.767404       &lt;== _fini() [eax = 0x0]
+[pid 30137] 13:59:42.780894 +++ process 30137 detached (ppid 30136) +++
+</pre>
+
+<h3>
+<a name="sc_3">
+3. 再帰
+</a>
+</h3>
+
+<p>
+末尾再帰で足し算を行うプログラムです。最適化の有無でトレースの出力が変化します。
+このほか、tar.gzの中には 相互再帰 (mutual recursion) を行うサンプルも含まれています。
+</p>
+
+<pre class="prettyprint">
+#include &lt;stdio.h&gt;
+
+int sum(int n) {
+  return n == 0 ? 0 : n + sum(n - 1);
+}
+
+int main() {
+  int s = sum(10);
+  printf("sum(10) = %d\n", s);
+  return s;
+}
+</pre>
+
+<p>
+まず最適化のかかっていない実行ファイルのトレース結果から。再帰呼び出しの様子がわかりやすく出力されています。
+</p>
+
+<pre>
+$ ../src/tracef -lATv ./recursion
+[pid 30102] +++ process 30102 attached (ppid 30101) +++
+[pid 30102] === symbols loaded: './recursion' ===
+[pid 30102] ==&gt; _start() at 0x080482b0
+[pid 30102]    ==&gt; __libc_csu_init() at 0x08048410
+[pid 30102]       ==&gt; _init() at 0x08048250
+[pid 30102]          ==&gt; call_gmon_start() at 0x080482d4
+[pid 30102]          &lt;== call_gmon_start() [eax = 0x0]
+[pid 30102]          ==&gt; frame_dummy() at 0x08048360
+[pid 30102]          &lt;== frame_dummy() [eax = 0x0]
+[pid 30102]          ==&gt; __do_global_ctors_aux() at 0x08048480
+[pid 30102]          &lt;== __do_global_ctors_aux() [eax = 0xffffffff]
+[pid 30102]       &lt;== _init() [eax = 0xffffffff]
+[pid 30102]    &lt;== __libc_csu_init() [eax = 0x80494e4]
+[pid 30102]    ==&gt; main() at 0x080483b4 [/home/sato/tracef/sample/recursion.c:9] 
+[pid 30102]       ==&gt; sum(int n &lt;10&gt;) at 0x08048384 [/home/sato/tracef/sample/recursion.c:4] 
+[pid 30102]          ==&gt; sum(int n &lt;9&gt;) at 0x08048384 [/home/sato/tracef/sample/recursion.c:4] 
+[pid 30102]             ==&gt; sum(int n &lt;8&gt;) at 0x08048384 [/home/sato/tracef/sample/recursion.c:4] 
+[pid 30102]                ==&gt; sum(int n &lt;7&gt;) at 0x08048384 [/home/sato/tracef/sample/recursion.c:4] 
+[pid 30102]                   ==&gt; sum(int n &lt;6&gt;) at 0x08048384 [/home/sato/tracef/sample/recursion.c:4] 
+[pid 30102]                      ==&gt; sum(int n &lt;5&gt;) at 0x08048384 [/home/sato/tracef/sample/recursion.c:4] 
+[pid 30102]                         ==&gt; sum(int n &lt;4&gt;) at 0x08048384 [/home/sato/tracef/sample/recursion.c:4] 
+[pid 30102]                            ==&gt; sum(int n &lt;3&gt;) at 0x08048384 [/home/sato/tracef/sample/recursion.c:4] 
+[pid 30102]                               ==&gt; sum(int n &lt;2&gt;) at 0x08048384 [/home/sato/tracef/sample/recursion.c:4] 
+[pid 30102]                                  ==&gt; sum(int n &lt;1&gt;) at 0x08048384 [/home/sato/tracef/sample/recursion.c:4] 
+[pid 30102]                                     ==&gt; sum(int n &lt;0&gt;) at 0x08048384 [/home/sato/tracef/sample/recursion.c:4] 
+[pid 30102]                                     &lt;== sum() [eax = 0x0]
+[pid 30102]                                  &lt;== sum() [eax = 0x1]
+[pid 30102]                               &lt;== sum() [eax = 0x3]
+[pid 30102]                            &lt;== sum() [eax = 0x6]
+[pid 30102]                         &lt;== sum() [eax = 0xa]
+[pid 30102]                      &lt;== sum() [eax = 0xf]
+[pid 30102]                   &lt;== sum() [eax = 0x15]
+[pid 30102]                &lt;== sum() [eax = 0x1c]
+[pid 30102]             &lt;== sum() [eax = 0x24]
+[pid 30102]          &lt;== sum() [eax = 0x2d]
+[pid 30102]       &lt;== sum() [eax = 0x37]
+[pid 30102]    &lt;== main() [eax = 0x37]
+[pid 30102]    ==&gt; _fini() at 0x080484a8
+[pid 30102]       ==&gt; __do_global_dtors_aux() at 0x08048300
+[pid 30102]       &lt;== __do_global_dtors_aux() [eax = 0x0]
+[pid 30102]    &lt;== _fini() [eax = 0x0]
+sum(10) = 55
+[pid 30102] +++ process 30102 detached (ppid 30101) +++
+</pre>
+
+<p>
+次に最適化あり (gcc -O1 -foptimize-sibling-calls) の場合の出力です。関数呼び出し sum(10); の中で行われているはずの足し算の様子が見えなくなりました。というわけで、最適化されたバイナリを相手にするときは少し注意が要ります。逆に、最適化がどう効いたかを調べるのにtracefを使うことも可能です。
+</p>
+
+<pre>
+$ ../src/tracef -lATv ./recursion_opt
+[pid 30104] +++ process 30104 attached (ppid 30103) +++
+[pid 30104] === symbols loaded: './recursion_opt' ===
+[pid 30104] ==&gt; _start() at 0x080482b0
+[pid 30104]    ==&gt; __libc_csu_init() at 0x080483f0
+[pid 30104]       ==&gt; _init() at 0x08048250
+[pid 30104]          ==&gt; call_gmon_start() at 0x080482d4
+[pid 30104]          &lt;== call_gmon_start() [eax = 0x0]
+[pid 30104]          ==&gt; frame_dummy() at 0x08048360
+[pid 30104]          &lt;== frame_dummy() [eax = 0x0]
+[pid 30104]          ==&gt; __do_global_ctors_aux() at 0x08048460
+[pid 30104]          &lt;== __do_global_ctors_aux() [eax = 0xffffffff]
+[pid 30104]       &lt;== _init() [eax = 0xffffffff]
+[pid 30104]    &lt;== __libc_csu_init() [eax = 0x80494c4]
+[pid 30104]    ==&gt; main() at 0x0804839c [/home/sato/tracef/sample/recursion.c:9] 
+[pid 30104]       ==&gt; sum(int n &lt;10&gt;) at 0x08048384 [/home/sato/tracef/sample/recursion.c:4] 
+[pid 30104]       &lt;== sum() [eax = 0x37]
+[pid 30104]    &lt;== main() [eax = 0x37]
+[pid 30104]    ==&gt; _fini() at 0x08048488
+[pid 30104]       ==&gt; __do_global_dtors_aux() at 0x08048300
+[pid 30104]       &lt;== __do_global_dtors_aux() [eax = 0x0]
+[pid 30104]    &lt;== _fini() [eax = 0x0]
+sum(10) = 55
+[pid 30104] +++ process 30104 detached (ppid 30103) +++
+</pre>
+
+<h3>
+<a name="sc_4">
+4. マルチスレッド
+</a>
+</h3>
+
+<p>
+pthreadを使ったプログラムの解析も問題なく可能です。
+</p>
+
+<pre class="prettyprint">
+#include &lt;stdio.h&gt;
+#include &lt;pthread.h&gt;
+
+void* thread_entry(void* p) {
+  printf("pthread_self()=%lu\n", pthread_self());
+  return NULL;
+}
+
+int main() {
+  pthread_t t;
+  pthread_create(&amp;t, NULL, thread_entry, 0);
+  pthread_join(t, NULL);
+  return 0;
+}
+</pre>
+
+<p>
+tracefでいうスレッドのIDは、$ ps -L で出力される "LWP" の数字や、スレッドを生成した親プロセスの  /proc/pid/task/ 以下に現れる数字と同じものです。pthread_self() で得られる unsigned long int値とは別物です。<a href="http://help.lockergnome.com/linux/LWP-pthread_self-ftopict377457.html">混乱しがち</a>な点なので念のため。
+</p>
+
+<pre>
+$ ../src/tracef  --synthetic -flT ./thread
+[pid 30154] +++ process 30154 attached (ppid 30153) +++
+[pid 30154] === symbols loaded: './thread' ===
+[pid 30154] ==&gt; _start() at 0x080483c0
+[pid 30154]    ==&gt; __libc_start_main@plt() at 0x08048380
+[pid 30154]       ==&gt; __libc_csu_init() at 0x08048520
+[pid 30154]          ==&gt; _init() at 0x08048338
+[pid 30154]             ==&gt; call_gmon_start() at 0x080483e4
+[pid 30154]             &lt;== call_gmon_start() [eax = 0x0]
+[pid 30154]             ==&gt; frame_dummy() at 0x08048470
+[pid 30154]             &lt;== frame_dummy() [eax = 0x0]
+[pid 30154]             ==&gt; __do_global_ctors_aux() at 0x08048590
+[pid 30154]             &lt;== __do_global_ctors_aux() [eax = 0xffffffff]
+[pid 30154]          &lt;== _init() [eax = 0xffffffff]
+[pid 30154]       &lt;== __libc_csu_init() [eax = 0x80495f8]
+[pid 30154]       ==&gt; main() at 0x080484b6 [/home/sato/tracef/sample/thread.c:11] 
+[pid 30154]          ==&gt; pthread_create@plt() at 0x080483a0
+[pid 30155] +++ thread  30155 attached (ppid 30154) +++
+[pid 30154]          &lt;== pthread_create@plt() [eax = 0x0]
+[pid 30154]          ==&gt; pthread_join@plt() at 0x08048360
+[pid 30155] ==&gt; thread_entry() at 0x08048494 [/home/sato/tracef/sample/thread.c:5] 
+[pid 30155]    ==&gt; pthread_self@plt() at 0x080483b0
+[pid 30155]    &lt;== pthread_self@plt() [eax = 0xb7efcb90]
+[pid 30155]    ==&gt; printf@plt() at 0x08048390
+pthread_self()=3085945744
+[pid 30155]    &lt;== printf@plt() [eax = 0x1a]
+[pid 30155] &lt;== thread_entry() [eax = 0x0]
+[pid 30154]          &lt;== pthread_join@plt() [eax = 0x0]
+[pid 30154]       &lt;== main() [eax = 0x0]
+[pid 30154]       ==&gt; _fini() at 0x080485b8
+[pid 30154]          ==&gt; __do_global_dtors_aux() at 0x08048410
+[pid 30154]          &lt;== __do_global_dtors_aux() [eax = 0x0]
+[pid 30154]       &lt;== _fini() [eax = 0x0]
+[pid 30155] +++ thread  30155 detached (ppid 30154) +++
+[pid 30154] +++ process 30154 detached (ppid 30153) +++
+tracef: done
+</pre>
+
+<h3>
+<a name="sc_5">
+5. みんなだいすき例外スロー
+</a>
+</h3>
+
+<p>
+例外がthrowされて、スタックが巻き戻る例です。
+</p>
+
+<pre class="prettyprint">
+#include &lt;stdio.h&gt;
+
+int c(int i) {
+  if (i == 0) throw 0xff;
+  return c(--i);
+}
+
+void b() { c(3); }
+
+int a() {
+  try { b(); } 
+  catch(int&amp; e) { return e; }
+  return 0;
+}
+
+int main() {
+  return a();
+}
+</pre>
+
+<p>
+c()が引数 i = 0 で呼ばれたタイミングで例外がスロー(__cxa_throw@plt)され、a()までスタックが巻戻った
+ことがわかります。a()が0xffをリターンしていることもきちんと表示できています。C++なシンボルのdemangleもできています。
+</p>
+
+<pre>
+$ ../src/tracef --synthetic -flT ./thread
+[pid 30110] +++ process 30110 attached (ppid 30109) +++
+[pid 30110] === symbols loaded: './throw' ===
+[pid 30110] ==&gt; _start() at 0x080484d0
+[pid 30110]    ==&gt; __libc_start_main@plt() at 0x08048458
+[pid 30110]       ==&gt; __libc_csu_init() at 0x08048680
+[pid 30110]          ==&gt; _init() at 0x08048420
+[pid 30110]             ==&gt; call_gmon_start() at 0x080484f4
+[pid 30110]             &lt;== call_gmon_start() [eax = 0x2e75d4]
+[pid 30110]             ==&gt; frame_dummy() at 0x08048580
+[pid 30110]             &lt;== frame_dummy() [eax = 0x0]
+[pid 30110]             ==&gt; __do_global_ctors_aux() at 0x080486f0
+[pid 30110]             &lt;== __do_global_ctors_aux() [eax = 0xffffffff]
+[pid 30110]          &lt;== _init() [eax = 0xffffffff]
+[pid 30110]       &lt;== __libc_csu_init() [eax = 0x804982c]
+[pid 30110]       ==&gt; main() at 0x0804864c [/home/sato/tracef/sample/throw.cpp:26] 
+[pid 30110]          ==&gt; a()() at 0x08048604 [/home/sato/tracef/sample/throw.cpp:16] 
+[pid 30110]             ==&gt; b()() at 0x080485f0 [/home/sato/tracef/sample/throw.cpp:11] 
+[pid 30110]                ==&gt; c(int)(int i &lt;3&gt;) at 0x080485a4 [/home/sato/tracef/sample/throw.cpp:5] 
+[pid 30110]                   ==&gt; c(int)(int i &lt;2&gt;) at 0x080485a4 [/home/sato/tracef/sample/throw.cpp:5] 
+[pid 30110]                      ==&gt; c(int)(int i &lt;1&gt;) at 0x080485a4 [/home/sato/tracef/sample/throw.cpp:5] 
+[pid 30110]                         ==&gt; c(int)(int i &lt;0&gt;) at 0x080485a4 [/home/sato/tracef/sample/throw.cpp:5] 
+[pid 30110]                            ==&gt; __cxa_allocate_exception@plt() at 0x08048468
+[pid 30110]                            &lt;== __cxa_allocate_exception@plt() [eax = 0x9e70058]
+[pid 30110]                            ==&gt; __cxa_throw@plt() at 0x08048478
+[pid 30110]                            ==&gt; __gxx_personality_v0@plt() at 0x080484a8
+[pid 30110]                            &lt;== __gxx_personality_v0@plt() [eax = 0x8]
+...
+[pid 30110]                            ==&gt; __gxx_personality_v0@plt() at 0x080484a8
+[pid 30110]                            &lt;== __gxx_personality_v0@plt() [eax = 0x7]
+[pid 30110]                            ==&gt; __cxa_begin_catch@plt() at 0x08048498
+[pid 30110]                            &lt;== __cxa_begin_catch@plt() [eax = 0x9e70058]
+[pid 30110]                            ==&gt; __cxa_end_catch@plt() at 0x08048488
+[pid 30110]                            &lt;== __cxa_end_catch@plt() [eax = 0x0]
+[pid 30110]          &lt;== a()() [eax = 0xff]
+[pid 30110]       &lt;== main() [eax = 0xff]
+[pid 30110]       ==&gt; _fini() at 0x08048718
+[pid 30110]          ==&gt; __do_global_dtors_aux() at 0x08048520
+[pid 30110]          &lt;== __do_global_dtors_aux() [eax = 0x0]
+[pid 30110]       &lt;== _fini() [eax = 0x0]
+[pid 30110] +++ process 30110 detached (ppid 30109) +++
+</pre>
+
+<h3>
+<a name="sc_6">
+6. mainの前の処理
+</a>
+</h3>
+
+<p>
+main関数が呼ばれるまでにどんな関数が呼ばれるか観察できます
+</p>
+
+<pre class="prettyprint">
+#include &lt;cstdio&gt;
+#include &lt;cstddef&gt;
+
+// mainの前に呼ばれる関数3つ
+
+int foo() { return 1; }
+int g = foo();
+
+struct bar {
+  bar() {}
+  ~bar() throw() {}
+} g2;
+
+__attribute__((constructor))
+void baz() {}
+
+// mainの前で初期化される変数value
+
+template&lt;const char* S, std::size_t L, std::size_t N = 0&gt;
+struct strSum_ {
+  static const unsigned long value;
+};
+
+template&lt;const char* S, std::size_t L, std::size_t N&gt;
+const unsigned long strSum_&lt;S, L, N&gt;::value = S[N] + strSum_&lt;S, L, N + 1&gt;::value; // XXX: runtime computation
+
+template&lt;const char* S, std::size_t L&gt;
+struct strSum_&lt;S, L, L&gt; {
+  static const unsigned long value = 0;
+};
+
+// http://www.thescripts.com/forum/thread156880.html
+template&lt;typename T, std::size_t L&gt; char (&lengthof_helper_(T(&)[L]))[L];
+#define LENGTHOF(array) sizeof(lengthof_helper_(array))
+
+extern const char s[] = "C++0x"; // external linkage 
+int main() {
+  return (int) strSum_&lt;s, LENGTHOF(s) - 1&gt;::value;
+}
+</pre>
+
+<p>
+foo(), bar(), baz() 関数が、 main()の前に呼ばれる筈で、これらはきちんとトレースできています。メンバ変数valueの初期化もランタイムに起きます（コンパイル時計算になっていません。よくないコードですので真似しないでください ^^;）が、こちらは関数呼び出しによって初期化されるわけではないので残念ながらトレースできていません。
+</p>
+
+<pre>
+$ ../src/tracef --plt -ClAT ./before_main2
+[pid 17098] +++ process 17098 attached (ppid 17097) +++
+[pid 17098] === symbols loaded: './before_main2' ===
+[pid 17098] ==&gt; _start() at 0x08048370
+[pid 17098]    ==&gt; __libc_start_main@plt() at 0x08048358
+[pid 17098]       ==&gt; __libc_csu_init() at 0x080485f0
+[pid 17098]          ==&gt; _init() at 0x08048310
+[pid 17098]             ==&gt; call_gmon_start() at 0x08048394
+[pid 17098]             &lt;== call_gmon_start() [eax = 0x2e75d4]
+[pid 17098]             ==&gt; frame_dummy() at 0x08048420
+[pid 17098]             &lt;== frame_dummy() [eax = 0x0]
+[pid 17098]             ==&gt; __do_global_ctors_aux() at 0x08048660
+[pid 17098]                ==&gt; global constructors keyed to _Z3foov() at 0x080485ac [/home/sato/tracef-trunk/sample/before_main2.cpp:44] 
+[pid 17098]                   ==&gt; __static_initialization_and_destruction_0(int, int)() at 0x08048482 [/home/sato/tracef-trunk/sample/before_main2.cpp:43] 
+[pid 17098]                      ==&gt; foo()() at 0x08048444 [/home/sato/tracef-trunk/sample/before_main2.cpp:6] 
+[pid 17098]                      &lt;== foo()() [eax = 0x1]
+[pid 17098]                      ==&gt; bar::bar()() at 0x080485c8 [/home/sato/tracef-trunk/sample/before_main2.cpp:10] 
+[pid 17098]                      &lt;== bar::bar()() [eax = 0x1]
+[pid 17098]                      ==&gt; __cxa_atexit@plt() at 0x08048338
+[pid 17098]                      &lt;== __cxa_atexit@plt() [eax = 0x0]
+[pid 17098]                   &lt;== __static_initialization_and_destruction_0(int, int)() [eax = 0x141]
+[pid 17098]                   ==&gt; baz()() at 0x0804844e [/home/sato/tracef-trunk/sample/before_main2.cpp:16] 
+[pid 17098]                   &lt;== baz()() [eax = 0x141]
+[pid 17098]                &lt;== global constructors keyed to _Z3foov() [eax = 0x141]
+[pid 17098]             &lt;== __do_global_ctors_aux() [eax = 0xffffffff]
+[pid 17098]          &lt;== _init() [eax = 0xffffffff]
+[pid 17098]       &lt;== __libc_csu_init() [eax = 0x80496bc]
+[pid 17098]       ==&gt; main() at 0x08048454 [/home/sato/tracef-trunk/sample/before_main2.cpp:41] 
+[pid 17098]       &lt;== main() [eax = 0x141]
+[pid 17098]       ==&gt; __tcf_0() at 0x0804846e [/home/sato/tracef-trunk/sample/before_main2.cpp:13] 
+[pid 17098]          ==&gt; bar::~bar()() at 0x080485ce [/home/sato/tracef-trunk/sample/before_main2.cpp:11] 
+[pid 17098]          &lt;== bar::~bar()() [eax = 0x804846e]
+[pid 17098]       &lt;== __tcf_0() [eax = 0x804846e]
+[pid 17098]       ==&gt; _fini() at 0x08048688
+[pid 17098]          ==&gt; __do_global_dtors_aux() at 0x080483c0
+[pid 17098]          &lt;== __do_global_dtors_aux() [eax = 0x0]
+[pid 17098]       &lt;== _fini() [eax = 0x0]
+[pid 17098] +++ process 17098 detached (ppid 17097) +++
+</pre>
+
+<h2>
+<a name="limitations">
+制限事項
+</a>
+</h2>
+
+<p>
+わかっている不具合を白状します:
+</p>
+
+<ul>
+<li>
+行番号表示オプション -l を使うと、メモリを必要以上に食います。調査中。
+<li>
+位置独立実行形式(PIE)は未サポートです。
+<ul>
+<li>
+PIEかどうかは、次のようにreadelf -hでELFヘッダのダンプすることで確認できます。ET_DYNならPIE, ET_EXECなら普通の実行ファイルです。fileコマンドでも区別できますが略。
+</ul>
+</ul>
+
+<pre>
+$ readelf -h pie_binary | grep Type:
+  Type: DYN (Shared object file)
+</pre>
+
+<ul>
+<li>
+次の2つの条件が重なると、throwされたC++の例外を正常にcatchできずに、プロセスがSIGABRTで終了(std::terminate)してしまいます。そのようなthrow&amp;catchを行うC++のプログラムをトレースする場合は、--plt か -T のどちらかのオプションを使用しないようにしてください。詳しくは、samples/throw3.cpp を参照のこと。
+<ol>
+<li>DSO内でC++の例外のthrowが行われ、tracefしている実行ファイル内でその例外のcatchが行われる
+<li>tracefに--pltと-Tの両方を与えてトレースを行っている
+</ol>
+</li>
+<li>
+-Wl,-Bstaticと-Wl,-Bdynamicを駆使してリンクした実行ファイルは、うまく扱えないことがありそうです。
+<!-- rm src/mt-daapd; make CFLAGS="-O0 -g" LDFLAGS="-g" LIBS="-Wl,-Bstatic -lgdbm -lz -lc -Wl,-Bdynamic -lid3tag -lpthread" でおかしなことになった。ltraceでもだめ。 -->
+</ul>
+
+<h2>
+<a name="opt">
+コマンドラインオプション
+</a>
+</h2>
+
+<p>
+おすすめは tracef --plt -CflT です。
+</p>
+
+<pre>
+Usage:
+
+  % tracef [option ...] command [arg ...]
+  % tracef [option ...] -p pid
+
+Options:
+
+  -? [ --help ]               
+
+     このヘルプを表示
+
+  -V [ --version ]            
+
+     バージョンを表示して終了
+
+  -o [ --output ] arg  
+
+     トレース結果をstderrではなく、'arg' で指定したファイルに出力する
+
+  --ff
+
+     プロセスあるいはスレッド毎に別のファイルにログを記録する。ログファイル名は
+     「-o で指定したファイル名」＋「プロセス/スレッドID」となる。
+
+  -f [ --trace-child ]
+
+     fork()やclone()で生成された子プロセス、子スレッドも追跡する。
+
+  --synthetic
+  --plt
+
+     合成シンボルもトレースの対象とする。このオプションを使うと、ライブラリ関数呼び出し
+     やシステムコール呼び出し（の一部）をトレースすることができる。たとえば、printf@plt() 
+     や signal@plt() など。
+
+  -C [ --demangle ]
+
+     C++の低レベルな関数名を可読なものに変換して表示する。
+
+  -t [ --time ]
+
+     出力の各行に現在時刻を付加する。
+
+  -u [ --microseconds ]  
+
+     出力の各行に現在時刻(マイクロ秒単位)を付加する。
+
+  -A [ --arg ] 
+
+     関数の引数名を表示する(EXPERIMENTAL)
+
+  -v [ --arg-val ]
+
+     関数の引数の値を表示する(EXPERIMENTAL, x86のみ)
+
+  -T [ --call-tree ]  
+
+     関数呼び出しをツリー状に表示する。解析対象がマルチプロセス/マルチスレッドの場合、
+     -o および --ff オプションと同時に使用することを推奨する。
+
+  --offset arg
+
+     ツリー表示時の関数呼び出しあたりのオフセット量(スペースの数)を指定します。
+     デフォルト値は3。
+
+  --no-pid 
+
+     プロセスIDを表示しない。
+
+  -i [ --no-eip ] 
+
+     関数のアドレスを表示しない。
+
+  -l [ --line-numbers ] 
+
+     デバッグ情報を利用し、関数の定義されたファイル名、行番号を表示する。
+
+  -p [ --attach-process ] arg 
+
+     プロセスID 'arg' のプロセスにアタッチする。
+
+  -X [ --exclude ] arg
+
+     関数 'arg' をトレースせず、無視する。複数指定が可能。arg にはmangleされたシン
+     ボル名を指定。
+</pre>
+
+<h2>
+<a name="internal">
+仕組み (つぶやき)
+</a>
+</h2>
+
+<p>
+気が向いたら日記に書きます。以下メモ。
+</p>
+
+<ul>
+<li> libbfdを使って解析対象のプログラムの.symtabを読んで、全関数の先頭アドレスを得ている。ついでに.plt上の合成(synthetic)シンボル(printf@pltとか)も得ている
+<li> libopcodesで、さっき得た各関数の先頭アドレスから、バイナリを逆アセンブル、ret命令を探すことで関数からのリターンアドレスを静的に解析/特定している。スタック見て動的にやる方法もありますが、今回は静的にやった。ltraceとは違う方法にしてみたかったというのもあるし、マルチスレッド環境で動的にセットしたBPを別スレッドが踏むとめんどくさいというのもあったり。
+<li> ret/retq命令探しの際、_start() はretじゃなくてhltだとか、末尾再帰関数で-O2だとretがないとか、throwで抜けてるとやっぱりretがないとか、構造体を値で戻すような関数だと0xC3ではなく0xC2だったりとか、__attribute((noreturn))されてるとretしないとか、そういう関数を呼ぶ側もcallではなくjmpにしちゃうとか、探すときに細かい注意点がある。
+<li> ひとつの関数内に複数のretが存在することがある。switch使ったときとか? v0.11から全部探すようにした。ちゃんと探さないとインデントがどんどん深くなってしまう。
+<li> ひとつの関数内に、普通のleave-retと、他の関数の「先頭への」jmp (callではなく) が共存していることがある。こういう関数に入ってjmp側に行かれてしまうと、-T 時のインデントが実際より1つ深くなってしまう。対策は.. 「関数先頭へのjmp」 は検出できるから可能だが、やめとく。そういう関数を -X してもらえばとりあえずindentはズレなくなる。あるいは検査対象を -O0 でコンパイルしてくれれば無問題になる。そういう関数を作るには、次のようなコードで -O2 すればOKな模様@gcc-4.1.2/x86。詳しくは samples/hard_to_find_ret.c とそのログを。
+</ul>
+<pre class="prettyprint">
+  switch(...) {
+  case X:
+     return hoge; // leave-ret になる
+  default:
+  }
+  return fuga();  // 自分以外の関数を呼ぶ。jmp になりがち
+} // 関数の終わり
+</pre>
+<ul>
+<li> .debug_info 見て、関数の定義されているファイル名、行番号の情報を取得している。同じく.debug_info 見て、関数の引数の情報を取得している。
+<li> 解析対象をforkしてptrace(TRACEME);してsetenv(LD_BIND_NOW=1);してexec。setenvしておかないと、PLT経由の関数呼びの初回(_dl_runtime_resolve時)がすぐにreturnするように表示されてしまう。子プロセスの起動時間を延ばしてしまう悪いhackかも。
+<li> 解析対象がメモリにロードされたら、関数の先頭アドレス、RET命令アドレスにブレークポイント設定。ptrace(POKE)でそのアドレスに0xCCを書くだけ
+<li> 解析対象が0xCCを踏むと、tracefにシグナルで通知がくる。ので、適当に情報を表示。0xCCで止まった解析対象の再開方法は、gdbとかと同じ(説明になっていない)。EIPを戻して元の命令書き戻してシングルステップして云々。詳しくは書籍「<a href="http://www.amazon.co.jp/o/ASIN/4756117457/casactdiary-22">デバッガの理論と実装</a>」あたりを。
+<li> PLT経由のジャンプのフックは、まずPLT先頭の jmp *0x80... のとこに0xCCを仕掛け、その次の命令 push 0x.. にも0xCCを仕掛けておく。jmp*を踏んで解析対象が止まったら、解析対象のスタック上のリターンアドレスをPEEKして、tracef側に記憶する。そのリターンアドレスをpush 0x..のアドレスにすりかえる(POKE)。push 0xにリターンしてくるとまた0xCCを踏んで止まるので、tracef側に記憶しておいた本物のリターンアドレスを、今度はEIPに書き込んでcontinue。以上。これはひどい。
+<li> この方法だと、DSO内で例外がthrowされて、それが解析対象のバイナリまで到達すると、abortする。ごめんなさいごめんなさいごめんなさい。<s>まぁ滅多にそんなことしないよね。</s>
+<li> 最低限の対策として、__cxa_throw@plt の先頭でブレークした時は、このリターンアドレスのtweakを行わないようにしておいた。これで、exe内でthrowして、exe内でcatchする場合は問題なくなった。dso内でthrowして、exe内でcatchするプログラムをtraceする場合は、--pltか-Tのどちらかをはずしてもらわないとダメだ...。やはりltrace風の(よくあるデバッガの)、スタック見てリターンアドレスに地雷置くやりかたのほうがよかったか。
+<li> GOT/PLT回りは、arch毎にコードがいる。x86_64はx86とほとんど同じだけど、jmp* がPC相対なのでやっぱり#ifdefすることになった。
+<li> 例外のthrowで表示(コールツリーのインデント具合)が乱れないよう、各プロセス/スレッドの関数呼び出し状況を、tracef側の std::stack&lt;addr_t&gt; にも記憶しておく。 
+<li> コマンドラインオプションの解析は、boost::program_optionsで。
+<li> ptraceはぐぐってもあまり文献がなくて、結局頼りになるのはstraceとltraceのソースコードだけだった。straceは多OS対応で魔窟なので、ltraceを中心に見た。でもltraceはスレッドというかcloneというか PTRACE_O_TRACECLONE というかに対応していない。結局そこは試行錯誤。あと、ltraceの .dynほげ セクションの処理部分は面白かったのだけど、今回は使わない...
+<li> straceをstraceしたり、ltraceをstraceしたりするといろいろなことがわかった。
+<li> プロセスのptraceを終了する(detach)と、そのプロセスが即死する現象に悩んだ。単に、プロセスの0xCCを元に戻さないままデタッチしていたからシグナルで死んでいるだけだった。ありがとうございました。forkすると0xCCなまま.textがコピーされることも忘れずに。当然ですが。
+<li> ptrace(GETREGS)に渡す構造体の初期化を省いたら、それが原因でvalgrindが死ぬほどの量の警告を出してくれた。ptraceの引数の初期化省略が原因だと気づくのにすこし時間がかかった。
+<li> ptrace(2)は、以前straceもどきを作ってみてそれでおわりにしていたけど、いろいろ試してみたら想像以上におもしろかった。早いとこ遊んでおけばよかった。
+</ul>
+
+<p>
+なんだかすごく楽しんだ感あり。
+</p>
+
+<h2>
+<a name="related_works">
+類似ツール
+</a>
+</h2>
+
+<p>
+実行ファイル内の、自分で書いた関数の動的なトレースができそうなツール一覧を集めてみました。仕組みをptraceに限定しなければ、いろいろありました。
+ptraceベースのツールであるtracefは、速度ではoprofileに負け、視覚化も含めた機能ではcallgrindに負けるので、strace, ltrace のように気楽に使えるツールにすることに重点をおいたつもりです。
+</p>
+
+<ul>
+
+<li>
+CPUのシミュレーションによるもの
+
+<ul>
+<li>
+<a href="http://kcachegrind.sourceforge.net/cgi-bin/show.cgi">callgrind + kcachegrind</a>
+</ul>
+
+<li>
+<a href="http://www.linux.or.jp/JM/html/LDP_man-pages/man2/ptrace.2.html">ptrace(2)</a>によるもの
+
+<ul>
+<li>
+ltraceの-xオプション (-xで指定した自作関数に限りトレースできます。「全部」というのは指定できません)
+<li>
+<a href="http://www.cs.ucsb.edu/~wkr/projects/itrace/">itrace</a> (全行程をsingle stepするという漢のツール)  
+<li>
+<a href="http://sourceforge.net/projects/xtrace/">xtrace</a> (makeできない...。clone(2)には対応していない模様)
+</ul>
+
+<li>
+GCCの -finstrument-functions を使ったもの
+<ul>
+<li>
+<a href="http://www-06.ibm.com/jp/developerworks/linux/050722/j_l-graphvis.shtml">pvtrace</a>
+<li>
+KLabの<a href="http://lab.klab.org/modules/mediawiki/index.php/Software#ftrace">ftrace</a>
+<li>
+<a href="http://ndevilla.free.fr/etrace/">etrace</a>
+<li>
+glibc's <a href="http://www.linux.or.jp/JF/JFdocs/LFS-BOOK/appendixa/glibc.html">xtrace</a>
+</ul>
+
+<li>
+カーネルでほげる奴
+<ul>
+<li>
+<a href="http://oprofile.sourceforge.net/">oprofile</a> (プロファイラだが一応call treeも出せる)
+</ul>
+
+<li>
+ソースコードに手を加えるもの
+<ul>
+<li>
+<a href="http://ctrace.sourceforge.net/">CTrace</a>
+<li>
+<a href="http://sourceforge.net/projects/tracestring/">traceString</a>
+</ul>
+
+<li>
+未調査
+<ul>
+<li>
+<a href="http://sourceware.org/frysk/">Frysk</a> (RedHatが開発していて、Fedoraに標準で入っているツール) 
+<li>
+<a href="http://lcamtuf.coredump.cx/fenris/whatis.shtml">fenris</a>? 
+<li>
+<a href="http://the-dude.sourceforge.net/">dude</a>? 
+</ul>
+
+</ul>
+
+<p>
+callgrindやoprofileはやっぱりすごいです。いろいろ。
+</p>
+
+<h2>  
+TODO
+</h2>
+
+<ul>
+<li>
+PIE対応
+<li>
+設定ファイル ~/.tracefrc
+<li>
+--exclude (-X) オプションのregex対応
+<li>
+--ff 時のファイル名の .pid の前に、スレッドなのかプロセスなのか識別できる記号をつける?
+<li>
+-l 時の.debug_info読みが重い件
+<li>
+gettext対応
+<li>
+ftraceのコードを使わせていただいている部分(.debug_info処理)を自分で書いてみる。で、libdrawf ではなく libdw (elfutils) を使うように変更しようかな。整数型/ポインタ型以外にも対応。名前空間対応、GNU C のnested-function対応。
+<li>
+ptrace関連で、vfork対応、PTRACE_O_TRACESYSGOOD 対応、singlestep成功を、DRレジスタを見て確認 (x86)
+<li>
+ARM対応、x86_64対応、arch依存部分の分離
+<li>
+armなLinux側ではスタブだけ動かすようにして、tracef本体はPCで動かす形にしないといかんかな。
+<li>
+C++シンボルのdemanglerがヘボいかもしれない (libibertyのを使ってます。global constructors keyed to ... のdemangleなど要改善かなぁ)
+<li>
+システムコールの表示をする? これはpretty print以外は簡単だけど。pritty printが難しく、かつstrace以上のものは作れないと思うのでやめとこうかな。
+<li>
+utraceサポート(?)
+<li>
+x86_64での-vサポート、x86_64で-m32でコンパイルしたバイナリを--pltでトレースするとエラーが発生する件の対処。
+<li>
+<s>ソフトウェアの名前があんまりだ。</s>
+</ul>
+
+<h2>
+謝辞
+</h2>
+
+<p>
+<ul>
+<li>関数の引数情報を取得する部分のコード (src/ftrace/prototype.cpp) は、ftrace-0.94のprototype.c をほぼそのまま利用させていただきました。
+<li>src/xelf.cpp の一部は、binutils-2.18/binutils/nm.c を参考にして書きました。
+<li>このページのソースコードのsyntax highlitingには、<a href="http://code.google.com/p/google-code-prettify/">google-code-prettify</a>を利用させていただいております。
+</ul>
+</p>
+
+<h2>
+不具合の報告
+</h2>
+
+<p>
+SATO Yusuke &lt;ads01002 _at_ nifty.com&gt; までメール  and/or  ブログで晒してhatenaのd:id:yupo5656にTB ..
+など適当な感じでお願いいたします。
+</p>
+
+<h2>
+ChangeLog
+</h2>
+
+<ul>
+<li>2007/09/16 v0.1
+<ul>
+<li>つくってみた。
+</ul>
+<li>2007/09/18 v0.11
+<ul>
+<li>関数内のret命令を全部探すようにした。
+</ul>
+<li>2007/09/19 v0.12
+<ul>
+<li>weak symbolもアドレスも収集してbreakするようにした。忘れてました...。
+<li>--plt オプションを追加。意味は --synthetic と同じ。
+</ul>
+<li>2007/09/22 v0.13
+<ul>
+<li>--offsetオプション追加。
+<li>-X で指定した関数が呼ばれた時に、ツリー表示のインデントが実際より深くなってしまう場合があるのを修正。
+</ul>
+<li>2007/09/23 v0.14
+<ul>
+<li>--no-pidオプション追加。ワタシ用。
+<li>--ff 時、process/threadのattach/detachのログをattach/detachした側(parent側)のログファイルにも書くようにした。
+</ul>
+<li>2007/10/03 v0.15
+<ul>
+<li>もともと、hogetraceという名前のソフトウェアだったが、あんまりなので自重してtracefに変えた。
+</ul>
+<li>2007/10/13 v0.16
+<ul>
+<li>RHEL4対応
+</ul>
+</ul>
+
+<h2>
+さいごにひとこと
+</h2>
+
+<p>
+ptraceシステムコールで遊んだことがあまりないなぁとふと思い、作ってみました。すでに類似ツールあるかなぁと思いつつも。
+もともと、arm用のLinux上で自分が使うために作りはじめたのですが、x86対応したところで連休が終わったのでとりあえず公開します。
+ -- 2007.09.16 さとう ゆうすけ <!-- 佐藤 祐介 -->
+</p>
+
+<br/>
+<hr/>
+$Id: index.html,v 1.7 2007/10/03 05:27:02 sato Exp $
+
+</body>
+</html>

@@ -1,0 +1,34 @@
+[pid 1232] +++ process 1232 attached (ppid 1231) +++
+[pid 1232] === symbols loaded: './thread' ===
+[pid 1232] ==> _start() at 0x080483c0
+[pid 1232]    ==> __libc_start_main@plt() at 0x08048380
+[pid 1232]       ==> __libc_csu_init() at 0x08048520
+[pid 1232]          ==> _init() at 0x08048338
+[pid 1232]             ==> call_gmon_start() at 0x080483e4
+[pid 1232]             <== call_gmon_start() [eax = 0x0]
+[pid 1232]             ==> frame_dummy() at 0x08048470
+[pid 1232]             <== frame_dummy() [eax = 0x0]
+[pid 1232]             ==> __do_global_ctors_aux() at 0x08048590
+[pid 1232]             <== __do_global_ctors_aux() [eax = 0xffffffff]
+[pid 1232]          <== _init() [eax = 0xffffffff]
+[pid 1232]       <== __libc_csu_init() [eax = 0x80495f8]
+[pid 1232]       ==> main() at 0x080484b6 [/home/sato/tracef-trunk/sample/thread.c:11] 
+[pid 1232]          ==> pthread_create@plt() at 0x080483a0
+[pid 1233] +++ thread  1233 attached (ppid 1232) +++
+[pid 1232]          <== pthread_create@plt() [eax = 0x0]
+[pid 1233] ==> thread_entry() at 0x08048494 [/home/sato/tracef-trunk/sample/thread.c:5] 
+[pid 1232]          ==> pthread_join@plt() at 0x08048360
+[pid 1233]    ==> pthread_self@plt() at 0x080483b0
+[pid 1233]    <== pthread_self@plt() [eax = 0xb7f37b90]
+[pid 1233]    ==> printf@plt() at 0x08048390
+[pid 1233]    <== printf@plt() [eax = 0x1a]
+[pid 1233] <== thread_entry() [eax = 0x0]
+[pid 1233] +++ thread  1233 detached (ppid 1232) +++
+[pid 1232]          <== pthread_join@plt() [eax = 0x0]
+[pid 1232]       <== main() [eax = 0x0]
+[pid 1232]       ==> _fini() at 0x080485b8
+[pid 1232]          ==> __do_global_dtors_aux() at 0x08048410
+[pid 1232]          <== __do_global_dtors_aux() [eax = 0x0]
+[pid 1232]       <== _fini() [eax = 0x0]
+pthread_self()=3086187408
+[pid 1232] +++ process 1232 detached (ppid 1231) +++

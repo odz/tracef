@@ -1,0 +1,18 @@
+[pid 1224] +++ process 1224 attached (ppid 1223) +++
+[pid 1224] === symbols loaded: './hello' ===
+[pid 1224] _start() at 0x08048300
+[pid 1224] __libc_start_main@plt() at 0x080482cc
+[pid 1224] __libc_csu_init() at 0x08048440
+[pid 1224] _init() at 0x08048294
+[pid 1224] call_gmon_start() at 0x08048324
+[pid 1224] frame_dummy() at 0x080483b0
+[pid 1224] __do_global_ctors_aux() at 0x080484b0
+[pid 1224] main(int argc, POINTER argv) at 0x080483f5 [/home/sato/tracef-trunk/sample/hello.c:14] 
+[pid 1224] my_func_1() at 0x080483e8 [/home/sato/tracef-trunk/sample/hello.c:9] 
+[pid 1224] my_func_2() at 0x080483d4 [/home/sato/tracef-trunk/sample/hello.c:4] 
+[pid 1224] puts@plt() at 0x080482ec
+[pid 1224] fflush@plt() at 0x080482dc
+hello, world!
+[pid 1224] _fini() at 0x080484d8
+[pid 1224] __do_global_dtors_aux() at 0x08048350
+[pid 1224] +++ process 1224 detached (ppid 1223) +++

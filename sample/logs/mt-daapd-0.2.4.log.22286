@@ -1,0 +1,12 @@
+[pid 22286] +++ thread  22286 attached (ppid 22284) +++
+[pid 22286] ==> signal_handler(POINTER arg) at 0x0804bb02 [/home/sato/mt-daapd-0.2.4/src/main.c:614] 
+[pid 22286]    ==> err_log(int level, uint cat, POINTER fmt) at 0x08052200 [/home/sato/mt-daapd-0.2.4/src/err.c:100] 
+[pid 22286]    <== err_log() [eax = 0x1]
+[pid 22286]    ==> err_log(int level, uint cat, POINTER fmt) at 0x08052200 [/home/sato/mt-daapd-0.2.4/src/err.c:100] 
+[pid 22286]       ==> err_lock_mutex() at 0x0805263a [/home/sato/mt-daapd-0.2.4/src/err.c:237] 
+[pid 22286]       <== err_lock_mutex() [eax = 0x0]
+[pid 22286]       ==> err_unlock_mutex() at 0x08052676 [/home/sato/mt-daapd-0.2.4/src/err.c:253] 
+[pid 22286]       <== err_unlock_mutex() [eax = 0x0]
+[pid 22286]    <== err_log() [eax = 0x0]
+[pid 22286] <== signal_handler() [eax = 0x0]
+[pid 22286] +++ thread  22286 detached (ppid 22284) +++

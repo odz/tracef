@@ -1,0 +1,21 @@
+[pid 1271] +++ process 1271 attached (ppid 1270) +++
+[pid 1271] === symbols loaded: './throw3' ===
+[pid 1271] ==> _start() at 0x080484e0
+[pid 1271]    ==> __libc_csu_init() at 0x08048670
+[pid 1271]       ==> _init() at 0x08048438
+[pid 1271]          ==> call_gmon_start() at 0x08048504
+[pid 1271]          <== call_gmon_start() [eax = 0x1f45d4]
+[pid 1271]          ==> frame_dummy() at 0x08048590
+[pid 1271]          <== frame_dummy() [eax = 0x0]
+[pid 1271]          ==> __do_global_ctors_aux() at 0x080486e0
+[pid 1271]          <== __do_global_ctors_aux() [eax = 0xffffffff]
+[pid 1271]       <== _init() [eax = 0xffffffff]
+[pid 1271]    <== __libc_csu_init() [eax = 0x80497cc]
+[pid 1271]    ==> main() at 0x080485b4 [/home/sato/tracef-trunk/sample/throw3.cpp:10] 
+[pid 1271]       ==> cmp2(void const*, void const*)(POINTER a <0xbfb9ef34>, POINTER b <0xbfb9ef38>) at 0x08048620 [/home/sato/tracef-trunk/sample/throw3.cpp:4] 
+[pid 1271]    <== main() [eax = 0x1]
+[pid 1271]    ==> _fini() at 0x08048708
+[pid 1271]       ==> __do_global_dtors_aux() at 0x08048530
+[pid 1271]       <== __do_global_dtors_aux() [eax = 0x0]
+[pid 1271]    <== _fini() [eax = 0x0]
+[pid 1271] +++ process 1271 detached (ppid 1270) +++

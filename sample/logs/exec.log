@@ -1,0 +1,148 @@
+[pid 1230] 21:39:03.981337 +++ process 1230 attached (ppid 1229) +++
+[pid 1230] 21:39:03.993608 === symbols loaded: './exec' ===
+[pid 1230] 21:39:03.998059 ==> _start() at 0x08048340
+[pid 1230] 21:39:03.999435    ==> __libc_start_main@plt() at 0x080482e4
+[pid 1230] 21:39:04.001662       ==> __libc_csu_init() at 0x08048550
+[pid 1230] 21:39:04.004015          ==> _init() at 0x080482ac
+[pid 1230] 21:39:04.004468             ==> call_gmon_start() at 0x08048364
+[pid 1230] 21:39:04.006224             <== call_gmon_start() [eax = 0x0]
+[pid 1230] 21:39:04.006447             ==> frame_dummy() at 0x080483f0
+[pid 1230] 21:39:04.007312             <== frame_dummy() [eax = 0x0]
+[pid 1230] 21:39:04.008050             ==> __do_global_ctors_aux() at 0x080485c0
+[pid 1230] 21:39:04.009251             <== __do_global_ctors_aux() [eax = 0xffffffff]
+[pid 1230] 21:39:04.010006          <== _init() [eax = 0xffffffff]
+[pid 1230] 21:39:04.011070       <== __libc_csu_init() [eax = 0x8049638]
+[pid 1230] 21:39:04.012063       ==> main(int argc <3>, POINTER argv <0xbfbbcaa4>) at 0x08048414 [/home/sato/tracef-trunk/sample/exec.c:6] 
+[pid 1230] 21:39:04.013338          ==> atoi@plt() at 0x08048314
+[pid 1230] 21:39:04.014361          <== atoi@plt() [eax = 0x0]
+[pid 1230] 21:39:04.015043          ==> atoi@plt() at 0x08048314
+[pid 1230] 21:39:04.016079          <== atoi@plt() [eax = 0x5]
+[pid 1230] 21:39:04.016407          ==> snprintf@plt() at 0x08048324
+[pid 1230] 21:39:04.017483          <== snprintf@plt() [eax = 0x1]
+[pid 1230] 21:39:04.018335          ==> snprintf@plt() at 0x08048324
+[pid 1230] 21:39:04.019330          <== snprintf@plt() [eax = 0x1]
+[pid 1230] 21:39:04.019513          ==> execlp@plt() at 0x080482f4
+[pid 1230] 21:39:04.024083 === execve(2) called. reloading symbols... ===
+[pid 1230] 21:39:04.030699 === symbols loaded: 'exe' ===
+[pid 1230] 21:39:04.036199 ==> _start() at 0x08048340
+[pid 1230] 21:39:04.037072    ==> __libc_start_main@plt() at 0x080482e4
+[pid 1230] 21:39:04.038453       ==> __libc_csu_init() at 0x08048550
+[pid 1230] 21:39:04.041165          ==> _init() at 0x080482ac
+[pid 1230] 21:39:04.042454             ==> call_gmon_start() at 0x08048364
+[pid 1230] 21:39:04.043099             <== call_gmon_start() [eax = 0x0]
+[pid 1230] 21:39:04.043631             ==> frame_dummy() at 0x080483f0
+[pid 1230] 21:39:04.044471             <== frame_dummy() [eax = 0x0]
+[pid 1230] 21:39:04.045159             ==> __do_global_ctors_aux() at 0x080485c0
+[pid 1230] 21:39:04.046022             <== __do_global_ctors_aux() [eax = 0xffffffff]
+[pid 1230] 21:39:04.046566          <== _init() [eax = 0xffffffff]
+[pid 1230] 21:39:04.048067       <== __libc_csu_init() [eax = 0x8049638]
+[pid 1230] 21:39:04.048636       ==> main(int argc <3>, POINTER argv <0xbfea9194>) at 0x08048414 [/home/sato/tracef-trunk/sample/exec.c:6] 
+[pid 1230] 21:39:04.049220          ==> atoi@plt() at 0x08048314
+[pid 1230] 21:39:04.050539          <== atoi@plt() [eax = 0x5]
+[pid 1230] 21:39:04.051162          ==> atoi@plt() at 0x08048314
+[pid 1230] 21:39:04.052114          <== atoi@plt() [eax = 0x4]
+[pid 1230] 21:39:04.052625          ==> snprintf@plt() at 0x08048324
+[pid 1230] 21:39:04.053603          <== snprintf@plt() [eax = 0x1]
+[pid 1230] 21:39:04.054150          ==> snprintf@plt() at 0x08048324
+[pid 1230] 21:39:04.055135          <== snprintf@plt() [eax = 0x1]
+[pid 1230] 21:39:04.056557          ==> execlp@plt() at 0x080482f4
+[pid 1230] 21:39:04.061112 === execve(2) called. reloading symbols... ===
+[pid 1230] 21:39:04.065934 === symbols loaded: 'exe' ===
+[pid 1230] 21:39:04.070410 ==> _start() at 0x08048340
+[pid 1230] 21:39:04.071244    ==> __libc_start_main@plt() at 0x080482e4
+[pid 1230] 21:39:04.072210       ==> __libc_csu_init() at 0x08048550
+[pid 1230] 21:39:04.074701          ==> _init() at 0x080482ac
+[pid 1230] 21:39:04.075192             ==> call_gmon_start() at 0x08048364
+[pid 1230] 21:39:04.076039             <== call_gmon_start() [eax = 0x0]
+[pid 1230] 21:39:04.077048             ==> frame_dummy() at 0x080483f0
+[pid 1230] 21:39:04.077761             <== frame_dummy() [eax = 0x0]
+[pid 1230] 21:39:04.078720             ==> __do_global_ctors_aux() at 0x080485c0
+[pid 1230] 21:39:04.080006             <== __do_global_ctors_aux() [eax = 0xffffffff]
+[pid 1230] 21:39:04.080705          <== _init() [eax = 0xffffffff]
+[pid 1230] 21:39:04.081122       <== __libc_csu_init() [eax = 0x8049638]
+[pid 1230] 21:39:04.082122       ==> main(int argc <3>, POINTER argv <0xbff1f174>) at 0x08048414 [/home/sato/tracef-trunk/sample/exec.c:6] 
+[pid 1230] 21:39:04.083034          ==> atoi@plt() at 0x08048314
+[pid 1230] 21:39:04.084096          <== atoi@plt() [eax = 0x9]
+[pid 1230] 21:39:04.085062          ==> atoi@plt() at 0x08048314
+[pid 1230] 21:39:04.086049          <== atoi@plt() [eax = 0x3]
+[pid 1230] 21:39:04.086200          ==> snprintf@plt() at 0x08048324
+[pid 1230] 21:39:04.088004          <== snprintf@plt() [eax = 0x2]
+[pid 1230] 21:39:04.088166          ==> snprintf@plt() at 0x08048324
+[pid 1230] 21:39:04.089356          <== snprintf@plt() [eax = 0x1]
+[pid 1230] 21:39:04.089995          ==> execlp@plt() at 0x080482f4
+[pid 1230] 21:39:04.093996 === execve(2) called. reloading symbols... ===
+[pid 1230] 21:39:04.098410 === symbols loaded: 'exe' ===
+[pid 1230] 21:39:04.102224 ==> _start() at 0x08048340
+[pid 1230] 21:39:04.105114    ==> __libc_start_main@plt() at 0x080482e4
+[pid 1230] 21:39:04.106132       ==> __libc_csu_init() at 0x08048550
+[pid 1230] 21:39:04.108924          ==> _init() at 0x080482ac
+[pid 1230] 21:39:04.109300             ==> call_gmon_start() at 0x08048364
+[pid 1230] 21:39:04.110110             <== call_gmon_start() [eax = 0x0]
+[pid 1230] 21:39:04.111009             ==> frame_dummy() at 0x080483f0
+[pid 1230] 21:39:04.111273             <== frame_dummy() [eax = 0x0]
+[pid 1230] 21:39:04.112247             ==> __do_global_ctors_aux() at 0x080485c0
+[pid 1230] 21:39:04.113126             <== __do_global_ctors_aux() [eax = 0xffffffff]
+[pid 1230] 21:39:04.114015          <== _init() [eax = 0xffffffff]
+[pid 1230] 21:39:04.114230       <== __libc_csu_init() [eax = 0x8049638]
+[pid 1230] 21:39:04.115194       ==> main(int argc <3>, POINTER argv <0xbfb09814>) at 0x08048414 [/home/sato/tracef-trunk/sample/exec.c:6] 
+[pid 1230] 21:39:04.116104          ==> atoi@plt() at 0x08048314
+[pid 1230] 21:39:04.118000          <== atoi@plt() [eax = 0xc]
+[pid 1230] 21:39:04.118193          ==> atoi@plt() at 0x08048314
+[pid 1230] 21:39:04.119112          <== atoi@plt() [eax = 0x2]
+[pid 1230] 21:39:04.119263          ==> snprintf@plt() at 0x08048324
+[pid 1230] 21:39:04.120298          <== snprintf@plt() [eax = 0x2]
+[pid 1230] 21:39:04.121032          ==> snprintf@plt() at 0x08048324
+[pid 1230] 21:39:04.122012          <== snprintf@plt() [eax = 0x1]
+[pid 1230] 21:39:04.122999          ==> execlp@plt() at 0x080482f4
+[pid 1230] 21:39:04.127031 === execve(2) called. reloading symbols... ===
+[pid 1230] 21:39:04.132099 === symbols loaded: 'exe' ===
+[pid 1230] 21:39:04.136165 ==> _start() at 0x08048340
+[pid 1230] 21:39:04.137379    ==> __libc_start_main@plt() at 0x080482e4
+[pid 1230] 21:39:04.139410       ==> __libc_csu_init() at 0x08048550
+[pid 1230] 21:39:04.140994          ==> _init() at 0x080482ac
+[pid 1230] 21:39:04.141450             ==> call_gmon_start() at 0x08048364
+[pid 1230] 21:39:04.142319             <== call_gmon_start() [eax = 0x0]
+[pid 1230] 21:39:04.145254             ==> frame_dummy() at 0x080483f0
+[pid 1230] 21:39:04.146369             <== frame_dummy() [eax = 0x0]
+[pid 1230] 21:39:04.147340             ==> __do_global_ctors_aux() at 0x080485c0
+[pid 1230] 21:39:04.148389             <== __do_global_ctors_aux() [eax = 0xffffffff]
+[pid 1230] 21:39:04.149292          <== _init() [eax = 0xffffffff]
+[pid 1230] 21:39:04.150197       <== __libc_csu_init() [eax = 0x8049638]
+[pid 1230] 21:39:04.151354       ==> main(int argc <3>, POINTER argv <0xbfae05c4>) at 0x08048414 [/home/sato/tracef-trunk/sample/exec.c:6] 
+[pid 1230] 21:39:04.152068          ==> atoi@plt() at 0x08048314
+[pid 1230] 21:39:04.152539          <== atoi@plt() [eax = 0xe]
+[pid 1230] 21:39:04.153313          ==> atoi@plt() at 0x08048314
+[pid 1230] 21:39:04.154262          <== atoi@plt() [eax = 0x1]
+[pid 1230] 21:39:04.154466          ==> snprintf@plt() at 0x08048324
+[pid 1230] 21:39:04.156128          <== snprintf@plt() [eax = 0x2]
+[pid 1230] 21:39:04.156366          ==> snprintf@plt() at 0x08048324
+[pid 1230] 21:39:04.157279          <== snprintf@plt() [eax = 0x1]
+[pid 1230] 21:39:04.158083          ==> execlp@plt() at 0x080482f4
+[pid 1230] 21:39:04.161437 === execve(2) called. reloading symbols... ===
+[pid 1230] 21:39:04.165691 === symbols loaded: 'exe' ===
+[pid 1230] 21:39:04.169555 ==> _start() at 0x08048340
+[pid 1230] 21:39:04.170414    ==> __libc_start_main@plt() at 0x080482e4
+[pid 1230] 21:39:04.172053       ==> __libc_csu_init() at 0x08048550
+[pid 1230] 21:39:04.174682          ==> _init() at 0x080482ac
+[pid 1230] 21:39:04.175480             ==> call_gmon_start() at 0x08048364
+[pid 1230] 21:39:04.176499             <== call_gmon_start() [eax = 0x0]
+[pid 1230] 21:39:04.177395             ==> frame_dummy() at 0x080483f0
+[pid 1230] 21:39:04.178101             <== frame_dummy() [eax = 0x0]
+[pid 1230] 21:39:04.179378             ==> __do_global_ctors_aux() at 0x080485c0
+[pid 1230] 21:39:04.180090             <== __do_global_ctors_aux() [eax = 0xffffffff]
+[pid 1230] 21:39:04.181071          <== _init() [eax = 0xffffffff]
+[pid 1230] 21:39:04.181529       <== __libc_csu_init() [eax = 0x8049638]
+[pid 1230] 21:39:04.182450       ==> main(int argc <3>, POINTER argv <0xbfbff954>) at 0x08048414 [/home/sato/tracef-trunk/sample/exec.c:6] 
+[pid 1230] 21:39:04.183715          ==> atoi@plt() at 0x08048314
+[pid 1230] 21:39:04.184561          <== atoi@plt() [eax = 0xf]
+[pid 1230] 21:39:04.185503          ==> atoi@plt() at 0x08048314
+[pid 1230] 21:39:04.186419          <== atoi@plt() [eax = 0x0]
+[pid 1230] 21:39:04.186571          ==> printf@plt() at 0x08048304
+[pid 1230] 21:39:04.189071          <== printf@plt() [eax = 0xb]
+[pid 1230] 21:39:04.189513       <== main() [eax = 0xf]
+[pid 1230] 21:39:04.191067       ==> _fini() at 0x080485e8
+[pid 1230] 21:39:04.192013          ==> __do_global_dtors_aux() at 0x08048390
+[pid 1230] 21:39:04.193115          <== __do_global_dtors_aux() [eax = 0x0]
+[pid 1230] 21:39:04.193644       <== _fini() [eax = 0x0]
+answer: 15
+[pid 1230] 21:39:04.196203 +++ process 1230 detached (ppid 1229) +++

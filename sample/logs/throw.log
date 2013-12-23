@@ -1,0 +1,63 @@
+[pid 1267] +++ process 1267 attached (ppid 1266) +++
+[pid 1267] === symbols loaded: './throw' ===
+[pid 1267] ==> _start() at 0x080484d0
+[pid 1267]    ==> __libc_start_main@plt() at 0x08048458
+[pid 1267]       ==> __libc_csu_init() at 0x08048680
+[pid 1267]          ==> _init() at 0x08048420
+[pid 1267]             ==> call_gmon_start() at 0x080484f4
+[pid 1267]             <== call_gmon_start() [eax = 0x2e75d4]
+[pid 1267]             ==> frame_dummy() at 0x08048580
+[pid 1267]             <== frame_dummy() [eax = 0x0]
+[pid 1267]             ==> __do_global_ctors_aux() at 0x080486f0
+[pid 1267]             <== __do_global_ctors_aux() [eax = 0xffffffff]
+[pid 1267]          <== _init() [eax = 0xffffffff]
+[pid 1267]       <== __libc_csu_init() [eax = 0x804982c]
+[pid 1267]       ==> main() at 0x0804864c [/home/sato/tracef-trunk/sample/throw.cpp:26] 
+[pid 1267]          ==> a()() at 0x08048604 [/home/sato/tracef-trunk/sample/throw.cpp:16] 
+[pid 1267]             ==> b()() at 0x080485f0 [/home/sato/tracef-trunk/sample/throw.cpp:11] 
+[pid 1267]                ==> c(int)(int i <3>) at 0x080485a4 [/home/sato/tracef-trunk/sample/throw.cpp:5] 
+[pid 1267]                   ==> c(int)(int i <2>) at 0x080485a4 [/home/sato/tracef-trunk/sample/throw.cpp:5] 
+[pid 1267]                      ==> c(int)(int i <1>) at 0x080485a4 [/home/sato/tracef-trunk/sample/throw.cpp:5] 
+[pid 1267]                         ==> c(int)(int i <0>) at 0x080485a4 [/home/sato/tracef-trunk/sample/throw.cpp:5] 
+[pid 1267]                            ==> __cxa_allocate_exception@plt() at 0x08048468
+[pid 1267]                            <== __cxa_allocate_exception@plt() [eax = 0x9698058]
+[pid 1267]                            ==> __cxa_throw@plt() at 0x08048478
+[pid 1267]                            ==> __gxx_personality_v0@plt() at 0x080484a8
+[pid 1267]                            <== __gxx_personality_v0@plt() [eax = 0x8]
+[pid 1267]                            ==> __gxx_personality_v0@plt() at 0x080484a8
+[pid 1267]                            <== __gxx_personality_v0@plt() [eax = 0x8]
+[pid 1267]                            ==> __gxx_personality_v0@plt() at 0x080484a8
+[pid 1267]                            <== __gxx_personality_v0@plt() [eax = 0x8]
+[pid 1267]                            ==> __gxx_personality_v0@plt() at 0x080484a8
+[pid 1267]                            <== __gxx_personality_v0@plt() [eax = 0x8]
+[pid 1267]                            ==> __gxx_personality_v0@plt() at 0x080484a8
+[pid 1267]                            <== __gxx_personality_v0@plt() [eax = 0x8]
+[pid 1267]                            ==> __gxx_personality_v0@plt() at 0x080484a8
+[pid 1267]                            <== __gxx_personality_v0@plt() [eax = 0x8]
+[pid 1267]                            ==> __gxx_personality_v0@plt() at 0x080484a8
+[pid 1267]                            <== __gxx_personality_v0@plt() [eax = 0x6]
+[pid 1267]                            ==> __gxx_personality_v0@plt() at 0x080484a8
+[pid 1267]                            <== __gxx_personality_v0@plt() [eax = 0x8]
+[pid 1267]                            ==> __gxx_personality_v0@plt() at 0x080484a8
+[pid 1267]                            <== __gxx_personality_v0@plt() [eax = 0x8]
+[pid 1267]                            ==> __gxx_personality_v0@plt() at 0x080484a8
+[pid 1267]                            <== __gxx_personality_v0@plt() [eax = 0x8]
+[pid 1267]                            ==> __gxx_personality_v0@plt() at 0x080484a8
+[pid 1267]                            <== __gxx_personality_v0@plt() [eax = 0x8]
+[pid 1267]                            ==> __gxx_personality_v0@plt() at 0x080484a8
+[pid 1267]                            <== __gxx_personality_v0@plt() [eax = 0x8]
+[pid 1267]                            ==> __gxx_personality_v0@plt() at 0x080484a8
+[pid 1267]                            <== __gxx_personality_v0@plt() [eax = 0x8]
+[pid 1267]                            ==> __gxx_personality_v0@plt() at 0x080484a8
+[pid 1267]                            <== __gxx_personality_v0@plt() [eax = 0x7]
+[pid 1267]                            ==> __cxa_begin_catch@plt() at 0x08048498
+[pid 1267]                            <== __cxa_begin_catch@plt() [eax = 0x9698058]
+[pid 1267]                            ==> __cxa_end_catch@plt() at 0x08048488
+[pid 1267]                            <== __cxa_end_catch@plt() [eax = 0x0]
+[pid 1267]          <== a()() [eax = 0xff]
+[pid 1267]       <== main() [eax = 0xff]
+[pid 1267]       ==> _fini() at 0x08048718
+[pid 1267]          ==> __do_global_dtors_aux() at 0x08048520
+[pid 1267]          <== __do_global_dtors_aux() [eax = 0x0]
+[pid 1267]       <== _fini() [eax = 0x0]
+[pid 1267] +++ process 1267 detached (ppid 1266) +++

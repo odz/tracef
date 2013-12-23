@@ -1,0 +1,159 @@
+[pid 1269] +++ process 1269 attached (ppid 1268) +++
+[pid 1269] === symbols loaded: './throw2' ===
+[pid 1269] ==> _start() at 0x080484e0
+[pid 1269]    ==> __libc_start_main@plt() at 0x08048480
+[pid 1269]       ==> __libc_csu_init() at 0x08048680
+[pid 1269]          ==> _init() at 0x08048438
+[pid 1269]             ==> call_gmon_start() at 0x08048504
+[pid 1269]             <== call_gmon_start() [eax = 0x2e75d4]
+[pid 1269]             ==> frame_dummy() at 0x08048590
+[pid 1269]             <== frame_dummy() [eax = 0x0]
+[pid 1269]             ==> __do_global_ctors_aux() at 0x080486f0
+[pid 1269]             <== __do_global_ctors_aux() [eax = 0xffffffff]
+[pid 1269]          <== _init() [eax = 0xffffffff]
+[pid 1269]       <== __libc_csu_init() [eax = 0x80497dc]
+[pid 1269]       ==> main() at 0x080485b4 [/home/sato/tracef-trunk/sample/throw2.cpp:12] 
+[pid 1269]          ==> qsort@plt() at 0x08048460
+[pid 1269]             ==> cmp(void const*, void const*)(POINTER a <0xbfcb8654>, POINTER b <0xbfcb8658>) at 0x08048610 [/home/sato/tracef-trunk/sample/throw2.cpp:4] 
+[pid 1269]                ==> __cxa_allocate_exception@plt() at 0x08048490
+[pid 1269]                <== __cxa_allocate_exception@plt() [eax = 0x8620058]
+[pid 1269]                ==> __cxa_throw@plt() at 0x080484a0
+[pid 1269]                ==> __gxx_personality_v0@plt() at 0x080484d0
+[pid 1269]                <== __gxx_personality_v0@plt() [eax = 0x8]
+[pid 1269]                ==> __gxx_personality_v0@plt() at 0x080484d0
+[pid 1269]                <== __gxx_personality_v0@plt() [eax = 0x6]
+[pid 1269]                ==> __gxx_personality_v0@plt() at 0x080484d0
+[pid 1269]                <== __gxx_personality_v0@plt() [eax = 0x8]
+[pid 1269]                ==> __gxx_personality_v0@plt() at 0x080484d0
+[pid 1269]                <== __gxx_personality_v0@plt() [eax = 0x7]
+[pid 1269]                ==> __cxa_begin_catch@plt() at 0x080484c0
+[pid 1269]                <== __cxa_begin_catch@plt() [eax = 0x8620058]
+[pid 1269]                ==> __cxa_end_catch@plt() at 0x080484b0
+[pid 1269]                <== __cxa_end_catch@plt() [eax = 0x0]
+[pid 1269]             <== cmp(void const*, void const*)() [eax = 0x1]
+[pid 1269]             ==> cmp(void const*, void const*)(POINTER a <0xbfcb8660>, POINTER b <0xbfcb8664>) at 0x08048610 [/home/sato/tracef-trunk/sample/throw2.cpp:4] 
+[pid 1269]                ==> __cxa_allocate_exception@plt() at 0x08048490
+[pid 1269]                <== __cxa_allocate_exception@plt() [eax = 0x8620058]
+[pid 1269]                ==> __cxa_throw@plt() at 0x080484a0
+[pid 1269]                ==> __gxx_personality_v0@plt() at 0x080484d0
+[pid 1269]                <== __gxx_personality_v0@plt() [eax = 0x8]
+[pid 1269]                ==> __gxx_personality_v0@plt() at 0x080484d0
+[pid 1269]                <== __gxx_personality_v0@plt() [eax = 0x6]
+[pid 1269]                ==> __gxx_personality_v0@plt() at 0x080484d0
+[pid 1269]                <== __gxx_personality_v0@plt() [eax = 0x8]
+[pid 1269]                ==> __gxx_personality_v0@plt() at 0x080484d0
+[pid 1269]                <== __gxx_personality_v0@plt() [eax = 0x7]
+[pid 1269]                ==> __cxa_begin_catch@plt() at 0x080484c0
+[pid 1269]                <== __cxa_begin_catch@plt() [eax = 0x8620058]
+[pid 1269]                ==> __cxa_end_catch@plt() at 0x080484b0
+[pid 1269]                <== __cxa_end_catch@plt() [eax = 0x0]
+[pid 1269]             <== cmp(void const*, void const*)() [eax = 0x0]
+[pid 1269]             ==> cmp(void const*, void const*)(POINTER a <0xbfcb865c>, POINTER b <0xbfcb8660>) at 0x08048610 [/home/sato/tracef-trunk/sample/throw2.cpp:4] 
+[pid 1269]                ==> __cxa_allocate_exception@plt() at 0x08048490
+[pid 1269]                <== __cxa_allocate_exception@plt() [eax = 0x8620058]
+[pid 1269]                ==> __cxa_throw@plt() at 0x080484a0
+[pid 1269]                ==> __gxx_personality_v0@plt() at 0x080484d0
+[pid 1269]                <== __gxx_personality_v0@plt() [eax = 0x8]
+[pid 1269]                ==> __gxx_personality_v0@plt() at 0x080484d0
+[pid 1269]                <== __gxx_personality_v0@plt() [eax = 0x6]
+[pid 1269]                ==> __gxx_personality_v0@plt() at 0x080484d0
+[pid 1269]                <== __gxx_personality_v0@plt() [eax = 0x8]
+[pid 1269]                ==> __gxx_personality_v0@plt() at 0x080484d0
+[pid 1269]                <== __gxx_personality_v0@plt() [eax = 0x7]
+[pid 1269]                ==> __cxa_begin_catch@plt() at 0x080484c0
+[pid 1269]                <== __cxa_begin_catch@plt() [eax = 0x8620058]
+[pid 1269]                ==> __cxa_end_catch@plt() at 0x080484b0
+[pid 1269]                <== __cxa_end_catch@plt() [eax = 0x0]
+[pid 1269]             <== cmp(void const*, void const*)() [eax = 0x1]
+[pid 1269]             ==> cmp(void const*, void const*)(POINTER a <0xbfcb865c>, POINTER b <0xbfcb8664>) at 0x08048610 [/home/sato/tracef-trunk/sample/throw2.cpp:4] 
+[pid 1269]                ==> __cxa_allocate_exception@plt() at 0x08048490
+[pid 1269]                <== __cxa_allocate_exception@plt() [eax = 0x8620058]
+[pid 1269]                ==> __cxa_throw@plt() at 0x080484a0
+[pid 1269]                ==> __gxx_personality_v0@plt() at 0x080484d0
+[pid 1269]                <== __gxx_personality_v0@plt() [eax = 0x8]
+[pid 1269]                ==> __gxx_personality_v0@plt() at 0x080484d0
+[pid 1269]                <== __gxx_personality_v0@plt() [eax = 0x6]
+[pid 1269]                ==> __gxx_personality_v0@plt() at 0x080484d0
+[pid 1269]                <== __gxx_personality_v0@plt() [eax = 0x8]
+[pid 1269]                ==> __gxx_personality_v0@plt() at 0x080484d0
+[pid 1269]                <== __gxx_personality_v0@plt() [eax = 0x7]
+[pid 1269]                ==> __cxa_begin_catch@plt() at 0x080484c0
+[pid 1269]                <== __cxa_begin_catch@plt() [eax = 0x8620058]
+[pid 1269]                ==> __cxa_end_catch@plt() at 0x080484b0
+[pid 1269]                <== __cxa_end_catch@plt() [eax = 0x0]
+[pid 1269]             <== cmp(void const*, void const*)() [eax = 0x0]
+[pid 1269]             ==> cmp(void const*, void const*)(POINTER a <0xbfcb8654>, POINTER b <0xbfcb865c>) at 0x08048610 [/home/sato/tracef-trunk/sample/throw2.cpp:4] 
+[pid 1269]                ==> __cxa_allocate_exception@plt() at 0x08048490
+[pid 1269]                <== __cxa_allocate_exception@plt() [eax = 0x8620058]
+[pid 1269]                ==> __cxa_throw@plt() at 0x080484a0
+[pid 1269]                ==> __gxx_personality_v0@plt() at 0x080484d0
+[pid 1269]                <== __gxx_personality_v0@plt() [eax = 0x8]
+[pid 1269]                ==> __gxx_personality_v0@plt() at 0x080484d0
+[pid 1269]                <== __gxx_personality_v0@plt() [eax = 0x6]
+[pid 1269]                ==> __gxx_personality_v0@plt() at 0x080484d0
+[pid 1269]                <== __gxx_personality_v0@plt() [eax = 0x8]
+[pid 1269]                ==> __gxx_personality_v0@plt() at 0x080484d0
+[pid 1269]                <== __gxx_personality_v0@plt() [eax = 0x7]
+[pid 1269]                ==> __cxa_begin_catch@plt() at 0x080484c0
+[pid 1269]                <== __cxa_begin_catch@plt() [eax = 0x8620058]
+[pid 1269]                ==> __cxa_end_catch@plt() at 0x080484b0
+[pid 1269]                <== __cxa_end_catch@plt() [eax = 0x0]
+[pid 1269]             <== cmp(void const*, void const*)() [eax = 0x1]
+[pid 1269]             ==> cmp(void const*, void const*)(POINTER a <0xbfcb8654>, POINTER b <0xbfcb8660>) at 0x08048610 [/home/sato/tracef-trunk/sample/throw2.cpp:4] 
+[pid 1269]                ==> __cxa_allocate_exception@plt() at 0x08048490
+[pid 1269]                <== __cxa_allocate_exception@plt() [eax = 0x8620058]
+[pid 1269]                ==> __cxa_throw@plt() at 0x080484a0
+[pid 1269]                ==> __gxx_personality_v0@plt() at 0x080484d0
+[pid 1269]                <== __gxx_personality_v0@plt() [eax = 0x8]
+[pid 1269]                ==> __gxx_personality_v0@plt() at 0x080484d0
+[pid 1269]                <== __gxx_personality_v0@plt() [eax = 0x6]
+[pid 1269]                ==> __gxx_personality_v0@plt() at 0x080484d0
+[pid 1269]                <== __gxx_personality_v0@plt() [eax = 0x8]
+[pid 1269]                ==> __gxx_personality_v0@plt() at 0x080484d0
+[pid 1269]                <== __gxx_personality_v0@plt() [eax = 0x7]
+[pid 1269]                ==> __cxa_begin_catch@plt() at 0x080484c0
+[pid 1269]                <== __cxa_begin_catch@plt() [eax = 0x8620058]
+[pid 1269]                ==> __cxa_end_catch@plt() at 0x080484b0
+[pid 1269]                <== __cxa_end_catch@plt() [eax = 0x0]
+[pid 1269]             <== cmp(void const*, void const*)() [eax = 0x0]
+[pid 1269]             ==> cmp(void const*, void const*)(POINTER a <0xbfcb8658>, POINTER b <0xbfcb8660>) at 0x08048610 [/home/sato/tracef-trunk/sample/throw2.cpp:4] 
+[pid 1269]                ==> __cxa_allocate_exception@plt() at 0x08048490
+[pid 1269]                <== __cxa_allocate_exception@plt() [eax = 0x8620058]
+[pid 1269]                ==> __cxa_throw@plt() at 0x080484a0
+[pid 1269]                ==> __gxx_personality_v0@plt() at 0x080484d0
+[pid 1269]                <== __gxx_personality_v0@plt() [eax = 0x8]
+[pid 1269]                ==> __gxx_personality_v0@plt() at 0x080484d0
+[pid 1269]                <== __gxx_personality_v0@plt() [eax = 0x6]
+[pid 1269]                ==> __gxx_personality_v0@plt() at 0x080484d0
+[pid 1269]                <== __gxx_personality_v0@plt() [eax = 0x8]
+[pid 1269]                ==> __gxx_personality_v0@plt() at 0x080484d0
+[pid 1269]                <== __gxx_personality_v0@plt() [eax = 0x7]
+[pid 1269]                ==> __cxa_begin_catch@plt() at 0x080484c0
+[pid 1269]                <== __cxa_begin_catch@plt() [eax = 0x8620058]
+[pid 1269]                ==> __cxa_end_catch@plt() at 0x080484b0
+[pid 1269]                <== __cxa_end_catch@plt() [eax = 0x0]
+[pid 1269]             <== cmp(void const*, void const*)() [eax = 0x1]
+[pid 1269]             ==> cmp(void const*, void const*)(POINTER a <0xbfcb8658>, POINTER b <0xbfcb8664>) at 0x08048610 [/home/sato/tracef-trunk/sample/throw2.cpp:4] 
+[pid 1269]                ==> __cxa_allocate_exception@plt() at 0x08048490
+[pid 1269]                <== __cxa_allocate_exception@plt() [eax = 0x8620058]
+[pid 1269]                ==> __cxa_throw@plt() at 0x080484a0
+[pid 1269]                ==> __gxx_personality_v0@plt() at 0x080484d0
+[pid 1269]                <== __gxx_personality_v0@plt() [eax = 0x8]
+[pid 1269]                ==> __gxx_personality_v0@plt() at 0x080484d0
+[pid 1269]                <== __gxx_personality_v0@plt() [eax = 0x6]
+[pid 1269]                ==> __gxx_personality_v0@plt() at 0x080484d0
+[pid 1269]                <== __gxx_personality_v0@plt() [eax = 0x8]
+[pid 1269]                ==> __gxx_personality_v0@plt() at 0x080484d0
+[pid 1269]                <== __gxx_personality_v0@plt() [eax = 0x7]
+[pid 1269]                ==> __cxa_begin_catch@plt() at 0x080484c0
+[pid 1269]                <== __cxa_begin_catch@plt() [eax = 0x8620058]
+[pid 1269]                ==> __cxa_end_catch@plt() at 0x080484b0
+[pid 1269]                <== __cxa_end_catch@plt() [eax = 0x0]
+[pid 1269]             <== cmp(void const*, void const*)() [eax = 0x0]
+[pid 1269]          <== qsort@plt() [eax = 0xbfcb8654]
+[pid 1269]       <== main() [eax = 0x4]
+[pid 1269]       ==> _fini() at 0x08048718
+[pid 1269]          ==> __do_global_dtors_aux() at 0x08048530
+[pid 1269]          <== __do_global_dtors_aux() [eax = 0x0]
+[pid 1269]       <== _fini() [eax = 0x0]
+[pid 1269] +++ process 1269 detached (ppid 1268) +++

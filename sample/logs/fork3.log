@@ -1,0 +1,153 @@
+[pid 1248] 21:39:04.730280 +++ process 1248 attached (ppid 1247) +++
+[pid 1248] 21:39:04.740331 === symbols loaded: './fork3' ===
+[pid 1248] 21:39:04.749011 ==> _start() at 0x08048510
+[pid 1248] 21:39:04.751229    ==> __libc_start_main@plt() at 0x08048460
+[pid 1248] 21:39:04.752282       ==> __libc_csu_init() at 0x08048820
+[pid 1248] 21:39:04.754430          ==> _init() at 0x08048418
+[pid 1248] 21:39:04.755287             ==> call_gmon_start() at 0x08048534
+[pid 1248] 21:39:04.756309             <== call_gmon_start() [eax = 0x0]
+[pid 1248] 21:39:04.757053             ==> frame_dummy() at 0x080485c0
+[pid 1248] 21:39:04.757474             <== frame_dummy() [eax = 0x0]
+[pid 1248] 21:39:04.758402             ==> __do_global_ctors_aux() at 0x08048890
+[pid 1248] 21:39:04.759342             <== __do_global_ctors_aux() [eax = 0xffffffff]
+[pid 1248] 21:39:04.760382          <== _init() [eax = 0xffffffff]
+[pid 1248] 21:39:04.761250       <== __libc_csu_init() [eax = 0x8049928]
+[pid 1248] 21:39:04.762206       ==> main() at 0x08048612 [/home/sato/tracef-trunk/sample/fork3.c:17] 
+[pid 1248] 21:39:04.763082          ==> fork@plt() at 0x080484e0
+[pid 1249] 21:39:04.765448 +++ process 1249 attached (ppid 1248) +++
+[pid 1249] 21:39:04.768102          <== fork@plt() [eax = 0x0]
+[pid 1248] 21:39:04.768226          <== fork@plt() [eax = 0x4e1]
+[pid 1249] 21:39:04.769177          ==> puts@plt() at 0x080484d0
+[pid 1248] 21:39:04.770566          ==> fork@plt() at 0x080484e0
+[pid 1249] 21:39:04.772440          <== puts@plt() [eax = 0xf]
+[pid 1249] 21:39:04.775586       <== main() [eax = 0x1]
+[pid 1250] 21:39:04.776380 +++ process 1250 attached (ppid 1248) +++
+[pid 1250] 21:39:04.779116          <== fork@plt() [eax = 0x0]
+[pid 1249] 21:39:04.779241       ==> _fini() at 0x080488b8
+[pid 1250] 21:39:04.780420          ==> pthread_create@plt() at 0x080484a0
+[pid 1249] 21:39:04.782030          ==> __do_global_dtors_aux() at 0x08048560
+[pid 1248] 21:39:04.782518          <== fork@plt() [eax = 0x4e2]
+[pid 1249] 21:39:04.783398          <== __do_global_dtors_aux() [eax = 0x0]
+[pid 1248] 21:39:04.783562          ==> fork@plt() at 0x080484e0
+[pid 1252] 21:39:04.788154 +++ thread  1252 attached (ppid 1250) +++
+[pid 1249] 21:39:04.788264       <== _fini() [eax = 0x0]
+[pid 1250] 21:39:04.789470          <== pthread_create@plt() [eax = 0x0]
+[pid 1251] 21:39:04.789588 +++ process 1251 attached (ppid 1248) +++
+hello, parent!
+[pid 1252] 21:39:04.792619 ==> thread_entry(POINTER p) at 0x080485e4 [/home/sato/tracef-trunk/sample/fork3.c:10] 
+[pid 1250] 21:39:04.793494          ==> pause@plt() at 0x080484c0
+[pid 1252] 21:39:04.794528    ==> pthread_self@plt() at 0x08048500
+[pid 1249] 21:39:04.796106 +++ process 1249 detached (ppid 1248) +++
+[pid 1248] 21:39:04.796176          <== fork@plt() [eax = 0x4e3]
+[pid 1252] 21:39:04.797120    <== pthread_self@plt() [eax = 0xb7efab90]
+[pid 1248] 21:39:04.797210 --- SIGCHLD received (#17 Child exited) ---
+[pid 1252] 21:39:04.797685    ==> printf@plt() at 0x08048490
+[pid 1248] 21:39:04.798555          ==> fork@plt() at 0x080484e0
+[pid 1252] 21:39:04.800553    <== printf@plt() [eax = 0x1a]
+[pid 1252] 21:39:04.803027    ==> sleep@plt() at 0x080484b0
+[pid 1253] 21:39:04.803701 +++ process 1253 attached (ppid 1248) +++
+[pid 1253] 21:39:04.806678          <== fork@plt() [eax = 0x0]
+[pid 1248] 21:39:04.806810          <== fork@plt() [eax = 0x4e5]
+[pid 1253] 21:39:04.807231          ==> execlp@plt() at 0x08048470
+[pid 1248] 21:39:04.808146          ==> fork@plt() at 0x080484e0
+[pid 1253] 21:39:04.812213 === execve(2) called. reloading symbols... ===
+[pid 1253] 21:39:04.813861 === symbols loaded: 'echo' ===
+[pid 1253] 21:39:04.824260 +++ process 1253 detached (ppid 1248) +++
+[pid 1254] 21:39:04.825123 +++ process 1254 attached (ppid 1248) +++
+[pid 1254] 21:39:04.827737          <== fork@plt() [eax = 0x0]
+[pid 1248] 21:39:04.828266 --- SIGCHLD received (#17 Child exited) ---
+[pid 1254] 21:39:04.829036          ==> pthread_create@plt() at 0x080484a0
+[pid 1248] 21:39:04.830238          <== fork@plt() [eax = 0x4e6]
+[pid 1255] 21:39:04.833112 +++ thread  1255 attached (ppid 1254) +++
+[pid 1248] 21:39:04.833260          ==> kill@plt() at 0x080484f0
+[pid 1254] 21:39:04.834347          <== pthread_create@plt() [eax = 0x0]
+[pid 1255] 21:39:04.835151 ==> thread_entry(POINTER p) at 0x080485e4 [/home/sato/tracef-trunk/sample/fork3.c:10] 
+[pid 1254] 21:39:04.836070          ==> execlp@plt() at 0x08048470
+[pid 1255] 21:39:04.837120    ==> pthread_self@plt() at 0x08048500
+[pid 1250] 21:39:04.839083 --- SIGTERM received (#15 Terminated) ---
+[pid 1248] 21:39:04.839157          <== kill@plt() [eax = 0x0]
+[pid 1254] 21:39:04.843026 === execve(2) called. reloading symbols... ===
+[pid 1254] 21:39:04.852259 === symbols loaded: 'hello' ===
+[pid 1251] 21:39:04.853098          <== fork@plt() [eax = 0x0]
+[pid 1252] 21:39:04.853242 +++ thread  1252 (ppid 1250) KILLED by SIGTERM (#15 Terminated) +++
+[pid 1250] 21:39:04.853293 +++ process 1250 (ppid 1248) KILLED by SIGTERM (#15 Terminated) +++
+[pid 1248] 21:39:04.853333          ==> pthread_create@plt() at 0x080484a0
+[pid 1254] 21:39:04.858097 ==> _start() at 0x08048300
+[pid 1251] 21:39:04.859273          ==> pthread_create@plt() at 0x080484a0
+[pid 1254] 21:39:04.860084    ==> __libc_start_main@plt() at 0x080482cc
+[pid 1256] 21:39:04.864394 +++ thread  1256 attached (ppid 1251) +++
+[pid 1248] 21:39:04.864517             ==> pthread_create@plt() at 0x080484a0
+[pid 1254] 21:39:04.865291       ==> __libc_csu_init() at 0x08048440
+[pid 1256] 21:39:04.868136 ==> thread_entry(POINTER p) at 0x080485e4 [/home/sato/tracef-trunk/sample/fork3.c:10] 
+[pid 1256] 21:39:04.870050    ==> pthread_self@plt() at 0x08048500
+[pid 1256] 21:39:04.871240    <== pthread_self@plt() [eax = 0xb7efab90]
+[pid 1251] 21:39:04.872060          <== pthread_create@plt() [eax = 0x0]
+[pid 1257] 21:39:04.872166 +++ thread  1257 attached (ppid 1248) +++
+[pid 1257] 21:39:04.873103 ==> thread_entry(POINTER p) at 0x080485e4 [/home/sato/tracef-trunk/sample/fork3.c:10] 
+[pid 1256] 21:39:04.873276    ==> printf@plt() at 0x08048490
+[pid 1257] 21:39:04.874200    ==> pthread_self@plt() at 0x08048500
+[pid 1256] 21:39:04.876079    <== printf@plt() [eax = 0x1a]
+[pid 1254] 21:39:04.876987          ==> _init() at 0x08048294
+[pid 1257] 21:39:04.877330    <== pthread_self@plt() [eax = 0xb7efab90]
+[pid 1256] 21:39:04.877422    ==> sleep@plt() at 0x080484b0
+[pid 1257] 21:39:04.878137    ==> printf@plt() at 0x08048490
+[pid 1254] 21:39:04.879168             ==> call_gmon_start() at 0x08048324
+[pid 1257] 21:39:04.880100    <== printf@plt() [eax = 0x1a]
+[pid 1251] 21:39:04.880190 --- SIGSEGV received (#11 Segmentation fault), PC=0x080486cf, MEM=0x0000000 ---
+[pid 1248] 21:39:04.881293             <== pthread_create@plt() [eax = 0x0]
+[pid 1257] 21:39:04.882228    ==> sleep@plt() at 0x080484b0
+[pid 1254] 21:39:04.883330             <== call_gmon_start() [eax = 0x0]
+[pid 1256] 21:39:04.885301 +++ thread  1256 (ppid 1251) KILLED by SIGSEGV (#11 Segmentation fault) +++
+[pid 1251] 21:39:04.886181 +++ process 1251 (ppid 1248) KILLED by SIGSEGV (#11 Segmentation fault) +++
+[pid 1248] 21:39:04.886236          <== pthread_create@plt() [eax = 0x0]
+[pid 1257] 21:39:04.887145 --- SIGCHLD received (#17 Child exited) ---
+[pid 1254] 21:39:04.887202             ==> frame_dummy() at 0x080483b0
+[pid 1248] 21:39:04.888176          ==> sleep@plt() at 0x080484b0
+[pid 1254] 21:39:04.889224             <== frame_dummy() [eax = 0x0]
+[pid 1254] 21:39:04.890160             ==> __do_global_ctors_aux() at 0x080484b0
+[pid 1254] 21:39:04.891015             <== __do_global_ctors_aux() [eax = 0xffffffff]
+[pid 1254] 21:39:04.892156          <== _init() [eax = 0xffffffff]
+[pid 1254] 21:39:04.893005       <== __libc_csu_init() [eax = 0x8049514]
+[pid 1254] 21:39:04.894016       ==> main(int argc, POINTER argv) at 0x080483f5 [/home/sato/tracef-trunk/sample/hello.c:14] 
+[pid 1254] 21:39:04.894346          ==> my_func_1() at 0x080483e8 [/home/sato/tracef-trunk/sample/hello.c:9] 
+[pid 1254] 21:39:04.895205             ==> my_func_2() at 0x080483d4 [/home/sato/tracef-trunk/sample/hello.c:4] 
+[pid 1254] 21:39:04.896008                ==> puts@plt() at 0x080482ec
+[pid 1254] 21:39:04.897972                <== puts@plt() [eax = 0xe]
+[pid 1254] 21:39:04.898254             <== my_func_2() [eax = 0xe]
+[pid 1254] 21:39:04.899270          <== my_func_1() [eax = 0xe]
+[pid 1254] 21:39:04.900181          ==> fflush@plt() at 0x080482dc
+hello, world!
+[pid 1254] 21:39:04.938050          <== fflush@plt() [eax = 0x0]
+[pid 1254] 21:39:04.938622       <== main() [eax = 0x0]
+[pid 1254] 21:39:04.939539       ==> _fini() at 0x080484d8
+[pid 1254] 21:39:04.940485          ==> __do_global_dtors_aux() at 0x08048350
+[pid 1254] 21:39:04.941127          <== __do_global_dtors_aux() [eax = 0x0]
+[pid 1254] 21:39:04.942087       <== _fini() [eax = 0x0]
+[pid 1254] 21:39:04.944098 +++ process 1254 detached (ppid 1248) +++
+[pid 1248] 21:39:04.944559 --- SIGCHLD received (#17 Child exited) ---
+[pid 1257] 21:39:05.887161    <== sleep@plt() [eax = 0x0]
+[pid 1257] 21:39:05.888058 <== thread_entry() [eax = 0x0]
+[pid 1257] 21:39:05.889236 +++ thread  1257 detached (ppid 1248) +++
+[pid 1248] 21:39:10.890184          <== sleep@plt() [eax = 0x0]
+[pid 1248] 21:39:10.891095          ==> pthread_join@plt() at 0x08048440
+[pid 1248] 21:39:10.892926          <== pthread_join@plt() [eax = 0x0]
+[pid 1248] 21:39:10.893129          ==> waitpid@plt() at 0x08048480
+[pid 1248] 21:39:10.894240          <== waitpid@plt() [eax = 0x4e1]
+[pid 1248] 21:39:10.895014          ==> waitpid@plt() at 0x08048480
+[pid 1248] 21:39:10.896076          <== waitpid@plt() [eax = 0x4e2]
+[pid 1248] 21:39:10.896226          ==> waitpid@plt() at 0x08048480
+[pid 1248] 21:39:10.898574          <== waitpid@plt() [eax = 0x4e3]
+[pid 1248] 21:39:10.899186          ==> waitpid@plt() at 0x08048480
+[pid 1248] 21:39:10.900207          <== waitpid@plt() [eax = 0x4e5]
+[pid 1248] 21:39:10.901037          ==> waitpid@plt() at 0x08048480
+[pid 1248] 21:39:10.902132          <== waitpid@plt() [eax = 0x4e6]
+[pid 1248] 21:39:10.903058          ==> waitpid@plt() at 0x08048480
+[pid 1248] 21:39:10.904120          <== waitpid@plt() [eax = 0xffffffff]
+[pid 1248] 21:39:10.904272       <== main() [eax = 0x0]
+[pid 1248] 21:39:10.906246       ==> _fini() at 0x080488b8
+[pid 1248] 21:39:10.907155          ==> __do_global_dtors_aux() at 0x08048560
+[pid 1248] 21:39:10.908154          <== __do_global_dtors_aux() [eax = 0x0]
+[pid 1248] 21:39:10.909134       <== _fini() [eax = 0x0]
+pthread_self()=3085937552
+[pid 1248] 21:39:10.912196 +++ process 1248 detached (ppid 1247) +++
+[pid 1255] 21:39:10.913295 +++ thread  1255 detached (ppid 1254) +++

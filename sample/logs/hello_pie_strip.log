@@ -1,0 +1,4 @@
+[pid 1283] +++ process 1283 attached (ppid 1282) +++
+[pid 1283] === symbols loaded: './hello_pie_strip' ===
+hello, world!
+[pid 1283] +++ process 1283 detached (ppid 1282) +++

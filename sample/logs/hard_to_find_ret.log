@@ -1,0 +1,65 @@
+[pid 1285] +++ process 1285 attached (ppid 1284) +++
+[pid 1285] === symbols loaded: './hard_to_find_ret' ===
+[pid 1285] ==> _start() at 0x080482e0
+[pid 1285]    ==> __libc_start_main@plt() at 0x080482b8
+[pid 1285]       ==> __libc_csu_init() at 0x08048530
+[pid 1285]          ==> _init() at 0x08048270
+[pid 1285]             ==> call_gmon_start() at 0x08048304
+[pid 1285]             <== call_gmon_start() [eax = 0x0]
+[pid 1285]             ==> frame_dummy() at 0x08048390
+[pid 1285]             <== frame_dummy() [eax = 0x0]
+[pid 1285]             ==> __do_global_ctors_aux() at 0x080485a0
+[pid 1285]             <== __do_global_ctors_aux() [eax = 0xffffffff]
+[pid 1285]          <== _init() [eax = 0xffffffff]
+[pid 1285]       <== __libc_csu_init() [eax = 0x80495f4]
+[pid 1285]       ==> main(int argc <1>, POINTER argv <0xbf992674>) at 0x080484a9 [/home/sato/tracef-trunk/sample/hard_to_find_ret.c:50] 
+[pid 1285]          ==> foo(int argc <1>) at 0x08048443 [/home/sato/tracef-trunk/sample/hard_to_find_ret.c:36] 
+[pid 1285]             ==> sw(int a <3>) at 0x080483b4 [/home/sato/tracef-trunk/sample/hard_to_find_ret.c:4] 
+[pid 1285]                ==> getpid@plt() at 0x08048298
+[pid 1285]                <== getpid@plt() [eax = 0x505]
+[pid 1285]             <== sw() [eax = 0x505]
+[pid 1285]             ==> sw(int a <3>) at 0x080483b4 [/home/sato/tracef-trunk/sample/hard_to_find_ret.c:4] 
+[pid 1285]                ==> getpid@plt() at 0x08048298
+[pid 1285]                <== getpid@plt() [eax = 0x505]
+[pid 1285]             <== sw() [eax = 0x505]
+[pid 1285]             ==> sw(int a <3>) at 0x080483b4 [/home/sato/tracef-trunk/sample/hard_to_find_ret.c:4] 
+[pid 1285]                ==> getpid@plt() at 0x08048298
+[pid 1285]                <== getpid@plt() [eax = 0x505]
+[pid 1285]             <== sw() [eax = 0x505]
+[pid 1285]             ==> sw2(int a <2>) at 0x080483ff [/home/sato/tracef-trunk/sample/hard_to_find_ret.c:22] 
+[pid 1285]                ==> getpid@plt() at 0x08048298
+[pid 1285]                <== getpid@plt() [eax = 0x505]
+[pid 1285]             <== sw2() [eax = 0x505]
+[pid 1285]             ==> sw2(int a <2>) at 0x080483ff [/home/sato/tracef-trunk/sample/hard_to_find_ret.c:22] 
+[pid 1285]                ==> getpid@plt() at 0x08048298
+[pid 1285]                <== getpid@plt() [eax = 0x505]
+[pid 1285]             <== sw2() [eax = 0x505]
+[pid 1285]             ==> sw2(int a <2>) at 0x080483ff [/home/sato/tracef-trunk/sample/hard_to_find_ret.c:22] 
+[pid 1285]                ==> getpid@plt() at 0x08048298
+[pid 1285]                <== getpid@plt() [eax = 0x505]
+[pid 1285]             <== sw2() [eax = 0x505]
+[pid 1285]          <== foo() [eax = 0x0]
+[pid 1285]          ==> sw(int a <-1>) at 0x080483b4 [/home/sato/tracef-trunk/sample/hard_to_find_ret.c:4] 
+[pid 1285]             ==> getpid@plt() at 0x08048298
+[pid 1285]             <== getpid@plt() [eax = 0x505]
+[pid 1285]          <== sw() [eax = 0x505]
+[pid 1285]          ==> sw(int a <-1>) at 0x080483b4 [/home/sato/tracef-trunk/sample/hard_to_find_ret.c:4] 
+[pid 1285]             ==> getpid@plt() at 0x08048298
+[pid 1285]             <== getpid@plt() [eax = 0x505]
+[pid 1285]          <== sw() [eax = 0x505]
+[pid 1285]          ==> sw(int a <-1>) at 0x080483b4 [/home/sato/tracef-trunk/sample/hard_to_find_ret.c:4] 
+[pid 1285]             ==> getpid@plt() at 0x08048298
+[pid 1285]             <== getpid@plt() [eax = 0x505]
+[pid 1285]          <== sw() [eax = 0x505]
+[pid 1285]          ==> sw(int a <-1>) at 0x080483b4 [/home/sato/tracef-trunk/sample/hard_to_find_ret.c:4] 
+[pid 1285]             ==> getpid@plt() at 0x08048298
+[pid 1285]             <== getpid@plt() [eax = 0x505]
+[pid 1285]          <== sw() [eax = 0x505]
+[pid 1285]          ==> sw(int a <-1>) at 0x080483b4 [/home/sato/tracef-trunk/sample/hard_to_find_ret.c:4] 
+[pid 1285]             ==> getpid@plt() at 0x08048298
+[pid 1285]             <== getpid@plt() [eax = 0x505]
+[pid 1285]          <== sw() [eax = 0x505]
+[pid 1285]          ==> sw2(int a <0>) at 0x080483ff [/home/sato/tracef-trunk/sample/hard_to_find_ret.c:22] 
+[pid 1285]             ==> my_abort() at 0x080483ed [/home/sato/tracef-trunk/sample/hard_to_find_ret.c:18] 
+[pid 1285]             ==> _exit@plt() at 0x080482c8
+[pid 1285] +++ process 1285 detached (ppid 1284) +++

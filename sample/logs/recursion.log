@@ -1,0 +1,43 @@
+[pid 1259] +++ process 1259 attached (ppid 1258) +++
+[pid 1259] === symbols loaded: './recursion' ===
+[pid 1259] ==> _start() at 0x08048300
+[pid 1259]    ==> __libc_csu_init() at 0x08048460
+[pid 1259]       ==> _init() at 0x08048294
+[pid 1259]          ==> call_gmon_start() at 0x08048324
+[pid 1259]          <== call_gmon_start() [eax = 0x0]
+[pid 1259]          ==> frame_dummy() at 0x080483b0
+[pid 1259]          <== frame_dummy() [eax = 0x0]
+[pid 1259]          ==> __do_global_ctors_aux() at 0x080484d0
+[pid 1259]          <== __do_global_ctors_aux() [eax = 0xffffffff]
+[pid 1259]       <== _init() [eax = 0xffffffff]
+[pid 1259]    <== __libc_csu_init() [eax = 0x8049534]
+[pid 1259]    ==> main() at 0x08048404 [/home/sato/tracef-trunk/sample/recursion.c:9] 
+[pid 1259]       ==> sum(int n <10>) at 0x080483d4 [/home/sato/tracef-trunk/sample/recursion.c:4] 
+[pid 1259]          ==> sum(int n <9>) at 0x080483d4 [/home/sato/tracef-trunk/sample/recursion.c:4] 
+[pid 1259]             ==> sum(int n <8>) at 0x080483d4 [/home/sato/tracef-trunk/sample/recursion.c:4] 
+[pid 1259]                ==> sum(int n <7>) at 0x080483d4 [/home/sato/tracef-trunk/sample/recursion.c:4] 
+[pid 1259]                   ==> sum(int n <6>) at 0x080483d4 [/home/sato/tracef-trunk/sample/recursion.c:4] 
+[pid 1259]                      ==> sum(int n <5>) at 0x080483d4 [/home/sato/tracef-trunk/sample/recursion.c:4] 
+[pid 1259]                         ==> sum(int n <4>) at 0x080483d4 [/home/sato/tracef-trunk/sample/recursion.c:4] 
+[pid 1259]                            ==> sum(int n <3>) at 0x080483d4 [/home/sato/tracef-trunk/sample/recursion.c:4] 
+[pid 1259]                               ==> sum(int n <2>) at 0x080483d4 [/home/sato/tracef-trunk/sample/recursion.c:4] 
+[pid 1259]                                  ==> sum(int n <1>) at 0x080483d4 [/home/sato/tracef-trunk/sample/recursion.c:4] 
+[pid 1259]                                     ==> sum(int n <0>) at 0x080483d4 [/home/sato/tracef-trunk/sample/recursion.c:4] 
+[pid 1259]                                     <== sum() [eax = 0x0]
+[pid 1259]                                  <== sum() [eax = 0x1]
+[pid 1259]                               <== sum() [eax = 0x3]
+[pid 1259]                            <== sum() [eax = 0x6]
+[pid 1259]                         <== sum() [eax = 0xa]
+[pid 1259]                      <== sum() [eax = 0xf]
+[pid 1259]                   <== sum() [eax = 0x15]
+[pid 1259]                <== sum() [eax = 0x1c]
+[pid 1259]             <== sum() [eax = 0x24]
+[pid 1259]          <== sum() [eax = 0x2d]
+[pid 1259]       <== sum() [eax = 0x37]
+sum(10) = 55
+[pid 1259]    <== main() [eax = 0x37]
+[pid 1259]    ==> _fini() at 0x080484f8
+[pid 1259]       ==> __do_global_dtors_aux() at 0x08048350
+[pid 1259]       <== __do_global_dtors_aux() [eax = 0x0]
+[pid 1259]    <== _fini() [eax = 0x0]
+[pid 1259] +++ process 1259 detached (ppid 1258) +++

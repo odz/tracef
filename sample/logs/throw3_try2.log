@@ -1,0 +1,25 @@
+[pid 1273] +++ process 1273 attached (ppid 1272) +++
+[pid 1273] === symbols loaded: './throw3' ===
+[pid 1273] _start() at 0x080484e0
+[pid 1273] __libc_start_main@plt() at 0x08048480
+[pid 1273] __libc_csu_init() at 0x08048670
+[pid 1273] _init() at 0x08048438
+[pid 1273] call_gmon_start() at 0x08048504
+[pid 1273] frame_dummy() at 0x08048590
+[pid 1273] __do_global_ctors_aux() at 0x080486e0
+[pid 1273] main() at 0x080485b4 [/home/sato/tracef-trunk/sample/throw3.cpp:10] 
+[pid 1273] qsort@plt() at 0x08048460
+[pid 1273] cmp2(void const*, void const*)(POINTER a <0xbfb7c5d4>, POINTER b <0xbfb7c5d8>) at 0x08048620 [/home/sato/tracef-trunk/sample/throw3.cpp:4] 
+[pid 1273] __cxa_allocate_exception@plt() at 0x08048490
+[pid 1273] __cxa_throw@plt() at 0x080484a0
+[pid 1273] __gxx_personality_v0@plt() at 0x080484d0
+[pid 1273] __gxx_personality_v0@plt() at 0x080484d0
+[pid 1273] __gxx_personality_v0@plt() at 0x080484d0
+[pid 1273] __gxx_personality_v0@plt() at 0x080484d0
+[pid 1273] __gxx_personality_v0@plt() at 0x080484d0
+[pid 1273] __gxx_personality_v0@plt() at 0x080484d0
+[pid 1273] __cxa_begin_catch@plt() at 0x080484c0
+[pid 1273] __cxa_end_catch@plt() at 0x080484b0
+[pid 1273] _fini() at 0x08048708
+[pid 1273] __do_global_dtors_aux() at 0x08048530
+[pid 1273] +++ process 1273 detached (ppid 1272) +++

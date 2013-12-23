@@ -1,0 +1,37 @@
+[pid 1277] +++ process 1277 attached (ppid 1276) +++
+[pid 1277] === symbols loaded: './before_main2' ===
+[pid 1277] ==> _start() at 0x08048370
+[pid 1277]    ==> __libc_start_main@plt() at 0x08048358
+[pid 1277]       ==> __libc_csu_init() at 0x080485f0
+[pid 1277]          ==> _init() at 0x08048310
+[pid 1277]             ==> call_gmon_start() at 0x08048394
+[pid 1277]             <== call_gmon_start() [eax = 0x2e75d4]
+[pid 1277]             ==> frame_dummy() at 0x08048420
+[pid 1277]             <== frame_dummy() [eax = 0x0]
+[pid 1277]             ==> __do_global_ctors_aux() at 0x08048660
+[pid 1277]                ==> global constructors keyed to _Z3foov() at 0x080485ac [/home/sato/tracef-trunk/sample/before_main2.cpp:43] 
+[pid 1277]                   ==> __static_initialization_and_destruction_0(int, int)() at 0x08048482 [/home/sato/tracef-trunk/sample/before_main2.cpp:42] 
+[pid 1277]                      ==> foo()() at 0x08048444 [/home/sato/tracef-trunk/sample/before_main2.cpp:6] 
+[pid 1277]                      <== foo()() [eax = 0x1]
+[pid 1277]                      ==> bar::bar()() at 0x080485c8 [/home/sato/tracef-trunk/sample/before_main2.cpp:10] 
+[pid 1277]                      <== bar::bar()() [eax = 0x1]
+[pid 1277]                      ==> __cxa_atexit@plt() at 0x08048338
+[pid 1277]                      <== __cxa_atexit@plt() [eax = 0x0]
+[pid 1277]                   <== __static_initialization_and_destruction_0(int, int)() [eax = 0x141]
+[pid 1277]                   ==> baz()() at 0x0804844e [/home/sato/tracef-trunk/sample/before_main2.cpp:15] 
+[pid 1277]                   <== baz()() [eax = 0x141]
+[pid 1277]                <== global constructors keyed to _Z3foov() [eax = 0x141]
+[pid 1277]             <== __do_global_ctors_aux() [eax = 0xffffffff]
+[pid 1277]          <== _init() [eax = 0xffffffff]
+[pid 1277]       <== __libc_csu_init() [eax = 0x80496bc]
+[pid 1277]       ==> main() at 0x08048454 [/home/sato/tracef-trunk/sample/before_main2.cpp:40] 
+[pid 1277]       <== main() [eax = 0x141]
+[pid 1277]       ==> __tcf_0() at 0x0804846e [/home/sato/tracef-trunk/sample/before_main2.cpp:12] 
+[pid 1277]          ==> bar::~bar()() at 0x080485ce [/home/sato/tracef-trunk/sample/before_main2.cpp:11] 
+[pid 1277]          <== bar::~bar()() [eax = 0x804846e]
+[pid 1277]       <== __tcf_0() [eax = 0x804846e]
+[pid 1277]       ==> _fini() at 0x08048688
+[pid 1277]          ==> __do_global_dtors_aux() at 0x080483c0
+[pid 1277]          <== __do_global_dtors_aux() [eax = 0x0]
+[pid 1277]       <== _fini() [eax = 0x0]
+[pid 1277] +++ process 1277 detached (ppid 1276) +++

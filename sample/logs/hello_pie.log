@@ -1,0 +1,5 @@
+[pid 1281] +++ process 1281 attached (ppid 1280) +++
+tracef: ptrace: Input/output error (trace.cpp:58)
+[pid 1281] === symbols loaded: './hello_pie' ===
+hello, world!
+[pid 1281] +++ process 1281 detached (ppid 1280) +++

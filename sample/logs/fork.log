@@ -1,0 +1,34 @@
+[pid 1238] 21:39:04.431340 +++ process 1238 attached (ppid 1237) +++
+[pid 1238] 21:39:04.440990 === symbols loaded: './fork' ===
+[pid 1238] 21:39:04.446235 ==> _start() at 0x080482e0
+[pid 1238] 21:39:04.449278    ==> __libc_start_main@plt() at 0x080482a4
+[pid 1238] 21:39:04.450397       ==> __libc_csu_init() at 0x08048410
+[pid 1238] 21:39:04.452349          ==> _init() at 0x0804826c
+[pid 1238] 21:39:04.453458             ==> call_gmon_start() at 0x08048304
+[pid 1238] 21:39:04.454287             <== call_gmon_start() [eax = 0x0]
+[pid 1238] 21:39:04.455277             ==> frame_dummy() at 0x08048390
+[pid 1238] 21:39:04.456024             <== frame_dummy() [eax = 0x0]
+[pid 1238] 21:39:04.456377             ==> __do_global_ctors_aux() at 0x08048480
+[pid 1238] 21:39:04.457291             <== __do_global_ctors_aux() [eax = 0xffffffff]
+[pid 1238] 21:39:04.459330          <== _init() [eax = 0xffffffff]
+[pid 1238] 21:39:04.461012       <== __libc_csu_init() [eax = 0x80494e0]
+[pid 1238] 21:39:04.461452       ==> main() at 0x080483b4 [/home/sato/tracef-trunk/sample/fork.c:6] 
+[pid 1238] 21:39:04.462406          ==> fork@plt() at 0x080482c4
+[pid 1239] 21:39:04.465391 +++ process 1239 attached (ppid 1238) +++
+[pid 1239] 21:39:04.467431          <== fork@plt() [eax = 0x0]
+[pid 1238] 21:39:04.467546          <== fork@plt() [eax = 0x4d7]
+[pid 1239] 21:39:04.468322          ==> puts@plt() at 0x080482b4
+[pid 1238] 21:39:04.469333       <== main() [eax = 0x0]
+[pid 1239] 21:39:04.470506          <== puts@plt() [eax = 0xc]
+[pid 1239] 21:39:04.472393       <== main() [eax = 0x1]
+[pid 1238] 21:39:04.473041       ==> _fini() at 0x080484a8
+[pid 1239] 21:39:04.474355       ==> _fini() at 0x080484a8
+[pid 1238] 21:39:04.475353          ==> __do_global_dtors_aux() at 0x08048330
+[pid 1239] 21:39:04.476410          ==> __do_global_dtors_aux() at 0x08048330
+[pid 1238] 21:39:04.477383          <== __do_global_dtors_aux() [eax = 0x0]
+[pid 1239] 21:39:04.478035          <== __do_global_dtors_aux() [eax = 0x0]
+[pid 1238] 21:39:04.478471       <== _fini() [eax = 0x0]
+[pid 1239] 21:39:04.479447       <== _fini() [eax = 0x0]
+hello world
+[pid 1239] 21:39:04.482486 +++ process 1239 detached (ppid 1238) +++
+[pid 1238] 21:39:04.482670 +++ process 1238 detached (ppid 1237) +++

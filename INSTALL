@@ -1,0 +1,11 @@
+
+$ tar xvzf tracef-0.x.tar.gz 
+$ cd tracef-0.x
+$ ./configure
+
+$ cd src
+$ make
+
+$ cd ../sample
+$ ./sample.sh
+

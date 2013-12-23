@@ -1,0 +1,30 @@
+[pid 1226] +++ process 1226 attached (ppid 1225) +++
+[pid 1226] === symbols loaded: './hello' ===
+[pid 1226] ==> _start() at 0x08048300
+[pid 1226]    ==> __libc_start_main@plt() at 0x080482cc
+[pid 1226]       ==> __libc_csu_init() at 0x08048440
+[pid 1226]          ==> _init() at 0x08048294
+[pid 1226]             ==> call_gmon_start() at 0x08048324
+[pid 1226]             <== call_gmon_start() [eax = 0x0]
+[pid 1226]             ==> frame_dummy() at 0x080483b0
+[pid 1226]             <== frame_dummy() [eax = 0x0]
+[pid 1226]             ==> __do_global_ctors_aux() at 0x080484b0
+[pid 1226]             <== __do_global_ctors_aux() [eax = 0xffffffff]
+[pid 1226]          <== _init() [eax = 0xffffffff]
+[pid 1226]       <== __libc_csu_init() [eax = 0x8049514]
+[pid 1226]       ==> main(int argc, POINTER argv) at 0x080483f5 [/home/sato/tracef-trunk/sample/hello.c:14] 
+[pid 1226]          ==> my_func_1() at 0x080483e8 [/home/sato/tracef-trunk/sample/hello.c:9] 
+[pid 1226]             ==> my_func_2() at 0x080483d4 [/home/sato/tracef-trunk/sample/hello.c:4] 
+[pid 1226]                ==> puts@plt() at 0x080482ec
+[pid 1226]                <== puts@plt() [eax = 0xe]
+[pid 1226]             <== my_func_2() [eax = 0xe]
+[pid 1226]          <== my_func_1() [eax = 0xe]
+[pid 1226]          ==> fflush@plt() at 0x080482dc
+hello, world!
+[pid 1226]          <== fflush@plt() [eax = 0x0]
+[pid 1226]       <== main() [eax = 0x0]
+[pid 1226]       ==> _fini() at 0x080484d8
+[pid 1226]          ==> __do_global_dtors_aux() at 0x08048350
+[pid 1226]          <== __do_global_dtors_aux() [eax = 0x0]
+[pid 1226]       <== _fini() [eax = 0x0]
+[pid 1226] +++ process 1226 detached (ppid 1225) +++

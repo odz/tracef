@@ -1,0 +1,42 @@
+[pid 1289] +++ process 1289 attached (ppid 1288) +++
+[pid 1289] === symbols loaded: './hard_to_find_ret_opt' ===
+[pid 1289] ==> _start() at 0x080482e0
+[pid 1289]    ==> __libc_start_main@plt() at 0x080482b8
+[pid 1289]       ==> __libc_csu_init() at 0x08048530
+[pid 1289]          ==> _init() at 0x08048270
+[pid 1289]             ==> call_gmon_start() at 0x08048304
+[pid 1289]             <== call_gmon_start() [eax = 0x0]
+[pid 1289]             ==> frame_dummy() at 0x08048390
+[pid 1289]             <== frame_dummy() [eax = 0x0]
+[pid 1289]             ==> __do_global_ctors_aux() at 0x080485a0
+[pid 1289]             <== __do_global_ctors_aux() [eax = 0xffffffff]
+[pid 1289]          <== _init() [eax = 0xffffffff]
+[pid 1289]       <== __libc_csu_init() [eax = 0x80495f4]
+[pid 1289]       ==> main(int argc <1>, POINTER argv <0xbfcb3524>) at 0x080484b0 [/home/sato/tracef-trunk/sample/hard_to_find_ret.c:50] 
+[pid 1289]          ==> foo(int argc <1>) at 0x08048450 [/home/sato/tracef-trunk/sample/hard_to_find_ret.c:36] 
+[pid 1289]             ==> getpid@plt() at 0x08048298
+[pid 1289]             <== getpid@plt() [eax = 0x509]
+[pid 1289]             ==> getpid@plt() at 0x08048298
+[pid 1289]             <== getpid@plt() [eax = 0x509]
+[pid 1289]             ==> getpid@plt() at 0x08048298
+[pid 1289]             <== getpid@plt() [eax = 0x509]
+[pid 1289]             ==> getpid@plt() at 0x08048298
+[pid 1289]             <== getpid@plt() [eax = 0x509]
+[pid 1289]             ==> getpid@plt() at 0x08048298
+[pid 1289]             <== getpid@plt() [eax = 0x509]
+[pid 1289]             ==> getpid@plt() at 0x08048298
+[pid 1289]             <== getpid@plt() [eax = 0x509]
+[pid 1289]          <== foo() [eax = 0x0]
+[pid 1289]          ==> getpid@plt() at 0x08048298
+[pid 1289]          <== getpid@plt() [eax = 0x509]
+[pid 1289]          ==> getpid@plt() at 0x08048298
+[pid 1289]          <== getpid@plt() [eax = 0x509]
+[pid 1289]          ==> getpid@plt() at 0x08048298
+[pid 1289]          <== getpid@plt() [eax = 0x509]
+[pid 1289]          ==> getpid@plt() at 0x08048298
+[pid 1289]          <== getpid@plt() [eax = 0x509]
+[pid 1289]          ==> getpid@plt() at 0x08048298
+[pid 1289]          <== getpid@plt() [eax = 0x509]
+[pid 1289]          ==> my_abort() at 0x080483f0 [/home/sato/tracef-trunk/sample/hard_to_find_ret.c:18] 
+[pid 1289]          ==> _exit@plt() at 0x080482c8
+[pid 1289] +++ process 1289 detached (ppid 1288) +++

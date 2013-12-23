@@ -1,0 +1,77 @@
+[pid 1275] +++ process 1275 attached (ppid 1274) +++
+[pid 1275] === symbols loaded: './before_main' ===
+[pid 1275] ==> _start() at 0x080483f0
+[pid 1275]    ==> __libc_start_main@plt() at 0x080483d8
+[pid 1275]       ==> __libc_csu_init() at 0x080487b0
+[pid 1275]          ==> _init() at 0x08048370
+[pid 1275]             ==> call_gmon_start() at 0x08048414
+[pid 1275]             <== call_gmon_start() [eax = 0x1f45d4]
+[pid 1275]             ==> frame_dummy() at 0x080484a0
+[pid 1275]             <== frame_dummy() [eax = 0x0]
+[pid 1275]             ==> __do_global_ctors_aux() at 0x08048820
+[pid 1275]                ==> global constructors keyed to spid() at 0x0804854a
+[pid 1275]                   ==> __static_initialization_and_destruction_0(int, int)() at 0x080484de
+[pid 1275]                      ==> getpid@plt() at 0x08048398
+[pid 1275]                      <== getpid@plt() [eax = 0x4fb]
+[pid 1275]                      ==> std::allocator<int>::allocator()() at 0x0804857c
+[pid 1275]                         ==> __gnu_cxx::new_allocator<int>::new_allocator()() at 0x08048576
+[pid 1275]                         <== __gnu_cxx::new_allocator<int>::new_allocator()() [eax = 0xbfb13ef7]
+[pid 1275]                      <== std::allocator<int>::allocator()() [eax = 0xbfb13ef7]
+[pid 1275]                      ==> std::vector<int, std::allocator<int> >::vector(std::allocator<int> const&)() at 0x0804865e
+[pid 1275]                         ==> std::_Vector_base<int, std::allocator<int> >::_Vector_base(std::allocator<int> const&)() at 0x08048644
+[pid 1275]                            ==> std::_Vector_base<int, std::allocator<int> >::_Vector_impl::_Vector_impl(std::allocator<int> const&)() at 0x0804860c
+[pid 1275]                               ==> std::allocator<int>::allocator(std::allocator<int> const&)() at 0x080485c4
+[pid 1275]                                  ==> __gnu_cxx::new_allocator<int>::new_allocator(__gnu_cxx::new_allocator<int> const&)() at 0x080485be
+[pid 1275]                                  <== __gnu_cxx::new_allocator<int>::new_allocator(__gnu_cxx::new_allocator<int> const&)() [eax = 0xbfb13ef7]
+[pid 1275]                               <== std::allocator<int>::allocator(std::allocator<int> const&)() [eax = 0xbfb13ef7]
+[pid 1275]                            <== std::_Vector_base<int, std::allocator<int> >::_Vector_impl::_Vector_impl(std::allocator<int> const&)() [eax = 0x80499a0]
+[pid 1275]                         <== std::_Vector_base<int, std::allocator<int> >::_Vector_base(std::allocator<int> const&)() [eax = 0x80499a0]
+[pid 1275]                      <== std::vector<int, std::allocator<int> >::vector(std::allocator<int> const&)() [eax = 0x80499a0]
+[pid 1275]                      ==> std::allocator<int>::~allocator()() at 0x08048596
+[pid 1275]                         ==> __gnu_cxx::new_allocator<int>::~new_allocator()() at 0x08048590
+[pid 1275]                         <== __gnu_cxx::new_allocator<int>::~new_allocator()() [eax = 0xbfb13ef7]
+[pid 1275]                      <== std::allocator<int>::~allocator()() [eax = 0xbfb13ef7]
+[pid 1275]                      ==> __cxa_atexit@plt() at 0x080483a8
+[pid 1275]                      <== __cxa_atexit@plt() [eax = 0x0]
+[pid 1275]                   <== __static_initialization_and_destruction_0(int, int)() [eax = 0x0]
+[pid 1275]                <== global constructors keyed to spid() [eax = 0x0]
+[pid 1275]             <== __do_global_ctors_aux() [eax = 0xffffffff]
+[pid 1275]          <== _init() [eax = 0xffffffff]
+[pid 1275]       <== __libc_csu_init() [eax = 0x8049874]
+[pid 1275]       ==> main() at 0x080484c4
+[pid 1275]       <== main() [eax = 0x0]
+[pid 1275]       ==> __tcf_0() at 0x08048562
+[pid 1275]          ==> std::vector<int, std::allocator<int> >::~vector()() at 0x08048744
+[pid 1275]             ==> std::_Vector_base<int, std::allocator<int> >::_M_get_Tp_allocator()() at 0x08048678
+[pid 1275]             <== std::_Vector_base<int, std::allocator<int> >::_M_get_Tp_allocator()() [eax = 0x80499a0]
+[pid 1275]             ==> std::allocator<int>::allocator(std::allocator<int> const&)() at 0x080485de
+[pid 1275]                ==> __gnu_cxx::new_allocator<int>::new_allocator(__gnu_cxx::new_allocator<int> const&)() at 0x080485be
+[pid 1275]                <== __gnu_cxx::new_allocator<int>::new_allocator(__gnu_cxx::new_allocator<int> const&)() [eax = 0x80499a0]
+[pid 1275]             <== std::allocator<int>::allocator(std::allocator<int> const&)() [eax = 0x80499a0]
+[pid 1275]             ==> void std::_Destroy<int*, int>(int*, int*, std::allocator<int>)() at 0x080486a8
+[pid 1275]                ==> void std::_Destroy<int*>(int*, int*)() at 0x08048686
+[pid 1275]                   ==> void std::__destroy_aux<int*>(int*, int*, __true_type)() at 0x08048680
+[pid 1275]                   <== void std::__destroy_aux<int*>(int*, int*, __true_type)() [eax = 0x0]
+[pid 1275]                <== void std::_Destroy<int*>(int*, int*)() [eax = 0x0]
+[pid 1275]             <== void std::_Destroy<int*, int>(int*, int*, std::allocator<int>)() [eax = 0x0]
+[pid 1275]             ==> std::allocator<int>::~allocator()() at 0x08048596
+[pid 1275]                ==> __gnu_cxx::new_allocator<int>::~new_allocator()() at 0x08048590
+[pid 1275]                <== __gnu_cxx::new_allocator<int>::~new_allocator()() [eax = 0xbfb13f27]
+[pid 1275]             <== std::allocator<int>::~allocator()() [eax = 0xbfb13f27]
+[pid 1275]             ==> std::_Vector_base<int, std::allocator<int> >::~_Vector_base()() at 0x08048700
+[pid 1275]                ==> std::_Vector_base<int, std::allocator<int> >::_M_deallocate(int*, unsigned int)() at 0x080486d6
+[pid 1275]                <== std::_Vector_base<int, std::allocator<int> >::_M_deallocate(int*, unsigned int)() [eax = 0x80499a0]
+[pid 1275]                ==> std::_Vector_base<int, std::allocator<int> >::_Vector_impl::~_Vector_impl()() at 0x080485f8
+[pid 1275]                   ==> std::allocator<int>::~allocator()() at 0x080485aa
+[pid 1275]                      ==> __gnu_cxx::new_allocator<int>::~new_allocator()() at 0x08048590
+[pid 1275]                      <== __gnu_cxx::new_allocator<int>::~new_allocator()() [eax = 0x80499a0]
+[pid 1275]                   <== std::allocator<int>::~allocator()() [eax = 0x80499a0]
+[pid 1275]                <== std::_Vector_base<int, std::allocator<int> >::_Vector_impl::~_Vector_impl()() [eax = 0x80499a0]
+[pid 1275]             <== std::_Vector_base<int, std::allocator<int> >::~_Vector_base()() [eax = 0x80499a0]
+[pid 1275]          <== std::vector<int, std::allocator<int> >::~vector()() [eax = 0x80499a0]
+[pid 1275]       <== __tcf_0() [eax = 0x80499a0]
+[pid 1275]       ==> _fini() at 0x08048848
+[pid 1275]          ==> __do_global_dtors_aux() at 0x08048440
+[pid 1275]          <== __do_global_dtors_aux() [eax = 0x0]
+[pid 1275]       <== _fini() [eax = 0x0]
+[pid 1275] +++ process 1275 detached (ppid 1274) +++
